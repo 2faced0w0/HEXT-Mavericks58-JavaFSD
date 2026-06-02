@@ -29,4 +29,10 @@ public class VehicleController {
         PaginatedResponse<VehicleDto> vehicles = vehicleService.searchVehicles(model, maxPrice, brandName, location, pageable);
         return ResponseEntity.ok(vehicles);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<VehicleDto> addVehicle(@RequestBody com.roadready.dto.VehicleRequestDto dto) {
+        VehicleDto createdVehicle = vehicleService.addVehicle(dto);
+        return ResponseEntity.ok(createdVehicle);
+    }
 }

@@ -16,6 +16,15 @@ public class AuthController {
 
     private final UserService userService;
     private final JwtUtility jwtUtility;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @PostMapping("/signup")
+    public TokenDto signup(@RequestBody com.roadready.dto.SignupRequestDto dto) {
+        User user = userService.createCustomer(dto, passwordEncoder.encode(dto.password()));
+        String token = jwtUtility.generateToken(user.getEmail());
+        String role = user.getRole().toString();
+        return new TokenDto(user.getEmail(), role, token);
+    }
 
     @GetMapping("/login")
     public TokenDto login(Principal principal) {

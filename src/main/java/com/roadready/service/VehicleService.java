@@ -12,4 +12,6 @@ public interface VehicleService {
             String brandName,
             String location,
             Pageable pageable);
+
+    VehicleDto addVehicle(com.roadready.dto.VehicleRequestDto dto);
 }

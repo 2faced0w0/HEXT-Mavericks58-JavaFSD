@@ -1,5 +1,6 @@
 package com.roadready.config;
 
+import org.springframework.security.crypto.password.*;
 import com.roadready.config.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +32,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless APIs
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Allow auth endpoints
-                        .requestMatchers("/api/vehicles/search").permitAll() // Allow vehicle search without auth
+                        .requestMatchers("/api/auth/**").permitAll() // Allow login-signup auth endpoints for all
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/vehicles/search").permitAll() // Allow
+                                                                                                                      // vehicle
+                                                                                                                      // search
+                                                                                                                      // without
+                                                                                                                      // auth
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restricted to ADMIN
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles/add")
+                        .hasAnyRole("ADMIN", "AGENT") // Restricted to ADMIN or AGENT
                         .requestMatchers("/error").permitAll() // Expose actual errors instead of 403
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .httpBasic(org.springframework.security.config.Customizer.withDefaults());
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
@@ -44,14 +51,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     @SuppressWarnings("deprecation")
     public PasswordEncoder passwordEncoder() {
-        //return new BCryptPasswordEncoder();
-        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        java.util.Map<String, PasswordEncoder> encoders = new java.util.HashMap<>();
+        encoders.put("bcrypt", new BCryptPasswordEncoder());
+        encoders.put("noop", NoOpPasswordEncoder.getInstance());
+
+        DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder(
+                "bcrypt",
+                encoders);
+
+        // Keeping both Bcrypt and noop for now
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(NoOpPasswordEncoder.getInstance());
+
+        return delegatingPasswordEncoder;
     }
 }
