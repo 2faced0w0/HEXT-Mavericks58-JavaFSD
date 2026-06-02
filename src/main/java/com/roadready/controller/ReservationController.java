@@ -2,12 +2,12 @@ package com.roadready.controller;
 
 import com.roadready.dto.ReservationRequestDto;
 import com.roadready.dto.ReservationResponseDto;
+import com.roadready.dto.PaginatedResponse;
 import com.roadready.service.ReservationService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -32,8 +32,8 @@ public class ReservationController {
     }
 
     @GetMapping("/customer/{customerId}/past")
-    public ResponseEntity<List<ReservationResponseDto>> getPastReservations(@PathVariable Integer customerId) {
-        List<ReservationResponseDto> responses = reservationService.getPastReservations(customerId);
+    public ResponseEntity<PaginatedResponse<ReservationResponseDto>> getPastReservations(@PathVariable Integer customerId, Pageable pageable) {
+        PaginatedResponse<ReservationResponseDto> responses = reservationService.getPastReservations(customerId, pageable);
         return ResponseEntity.ok(responses);
     }
 }

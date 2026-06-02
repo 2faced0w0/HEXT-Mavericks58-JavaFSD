@@ -2,11 +2,11 @@ package com.roadready.service;
 
 import com.roadready.dto.ReservationRequestDto;
 import com.roadready.dto.ReservationResponseDto;
-
-import java.util.List;
+import com.roadready.dto.PaginatedResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface ReservationService {
     ReservationResponseDto createReservation(ReservationRequestDto requestDTO);
     ReservationResponseDto cancelReservation(Integer reservationId);
-    List<ReservationResponseDto> getPastReservations(Integer customerId);
+    PaginatedResponse<ReservationResponseDto> getPastReservations(Integer customerId, Pageable pageable);
 }

@@ -56,10 +56,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationResponseDto> getPastReservations(Integer customerId) {
-        return reservationRepository.findPastReservationsByCustomerId(customerId)
-                .stream()
-                .map(reservationMapper::mapEntityToDto)
-                .collect(Collectors.toList());
+    public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getPastReservations(Integer customerId, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<ReservationResponseDto> page = reservationRepository.findPastReservationsByCustomerId(customerId, pageable);
+        return new com.roadready.dto.PaginatedResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 }

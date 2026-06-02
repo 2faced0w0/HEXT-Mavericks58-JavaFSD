@@ -1,20 +1,32 @@
 package com.roadready.repository;
 
 import com.roadready.model.Reservation;
+import com.roadready.dto.ReservationResponseDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 
     @Query("""
-        SELECT r 
+        SELECT new com.roadready.dto.ReservationResponseDto(
+            r.reservationId,
+            c.id,
+            v.vehicleId,
+            r.pickupTime,
+            r.dropoffTime,
+            r.optionalExtras,
+            r.bookingStatus,
+            r.createdAt
+        )
         FROM Reservation r 
-        WHERE r.customer.id = :customerId
+        LEFT JOIN r.customer c
+        LEFT JOIN r.vehicle v
+        WHERE c.id = :customerId
         AND r.dropoffTime < CURRENT_TIMESTAMP""")
-    List<Reservation> findPastReservationsByCustomerId(@Param("customerId") Integer customerId);
+    Page<ReservationResponseDto> findPastReservationsByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
 }

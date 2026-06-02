@@ -21,7 +21,7 @@ public class ReservationMapper {
                 reservation.getPickupTime(),
                 reservation.getDropoffTime(),
                 reservation.getOptionalExtras(),
-                reservation.getBookingStatus() != null ? reservation.getBookingStatus().name() : null,
+                reservation.getBookingStatus(),
                 reservation.getCreatedAt()
         );
     }
@@ -36,7 +36,6 @@ public class ReservationMapper {
         reservation.setPickupTime(dto.pickupTime());
         reservation.setDropoffTime(dto.dropoffTime());
         reservation.setOptionalExtras(dto.optionalExtras());
-        // bookingStatus is set to PENDING by default in the entity
         return reservation;
     }
 }
