@@ -27,10 +27,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDto createReservation(ReservationRequestDto requestDto) {
-        Customer customer = customerRepository.findById(requestDto.customerId())
+        Customer customer = customerRepository
+                .findById(requestDto.customerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
-        Vehicle vehicle = vehicleRepository.findById(requestDto.vehicleId())
+        Vehicle vehicle = vehicleRepository
+                .findById(requestDto.vehicleId())
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
         if (!Boolean.TRUE.equals(vehicle.getIsAvailable())) {

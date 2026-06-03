@@ -21,7 +21,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
                 a.name, 
                 v.model, 
                 v.specifications, 
-                v.pricingPerDay, 
+                v.pricingPerDay,
                 v.isAvailable, 
                 v.imageUrl, 
                 v.location
@@ -37,5 +37,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
                                  @Param("maxPrice") BigDecimal maxPrice,
                                  @Param("brandName") String brandName,
                                  @Param("location") String location,
-                                 Pageable pageable);
+                                 Pageable pageable
+    );
+
+
 }
