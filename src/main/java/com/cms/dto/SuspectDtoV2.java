@@ -1,11 +1,15 @@
 package com.cms.dto;
 
-public class SuspectDtoV2 {
-    * Resp:
-            * incidentType
-        * incidentStatus
-        * incidentDetails
-        * suspectName
-        * suspectContact
-        * suspectId
+import com.cms.enums.IncidentStatus;
+import com.cms.enums.IncidentType;
+
+public record SuspectDtoV2(
+        String suspectName,
+        String suspectContact,
+        String suspectCity,
+        IncidentType incidentType,
+        IncidentStatus incidentStaus,
+        String officerName,
+        String stationTitle
+) {
 }

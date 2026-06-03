@@ -18,9 +18,20 @@ public interface IncidentSuspectRepository extends JpaRepository<IncidentSuspect
     List<Suspect> getAllSuspectByIncident(int incidentId);
 
     @Query("""
-            select new com.cms.dto.SuspectDtoV2(s.name, s.contact, s.city, i.incidentType, i.incidentStatus, o.name, stn.stationTitle)
-            from IncidentSuspect ins join ins.suspect s join ins.Incident i join i.officer o join o.station stn
-            where s.id=?1
+            select new com.cms.dto.SuspectDtoV2(
+            s.name,
+            s.contact,
+            s.city,
+            i.incidentType,
+            i.incidentStatus,
+            o.name,
+            stn.stationTitle)
+            from IncidentSuspect ins
+            join ins.suspect s
+            join ins.incident i
+            join i.officer o
+            join o.station stn
+            where stn.id=?1
             """)
-    List<SuspectDtoV2>  getAllSuspectByStation(int stationId);
+    List<SuspectDtoV2> getALLSuspectsByStation(int stationId); // DTO projection from JPQL
 }

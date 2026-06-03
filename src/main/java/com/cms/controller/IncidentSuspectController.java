@@ -1,11 +1,14 @@
 package com.cms.controller;
 
 import com.cms.dto.IncidentSuspectReqDto;
+import com.cms.dto.SuspectDtoV2;
+import com.cms.dto.SuspectRespDto;
 import com.cms.service.IncidentSuspectService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/incident/suspect")
@@ -26,23 +29,32 @@ public class IncidentSuspectController {
     }
 
     /*
-        * Resp:
-        * incidentType
-        * incidentStatus
-        * incidentDetails
-        * suspectName
-        * suspectContact
-        * suspectId
-     */
+     * Resp:
+     * incidentType
+     * incidentStatus
+     * incidentDetails
+     * suspectName
+     * suspectContact
+     * suspectId
+     * */
     @GetMapping("/by-incident/{incidentId}")
-    public ResponseEntity<Object> getAllSuspectsByIncidents(){
+    public List<SuspectRespDto> getAllSuspectByIncident(@PathVariable int incidentId){
 
-        return incidentSuspectService
+        return incidentSuspectService.getAllSuspectByIncident(incidentId);
     }
 
+    /*
+     * suspectName
+     * suspectContact
+     * suspectCity
+     * incidentType
+     * incidentStaus
+     * officerName
+     * stationTitle
+     * */
     @GetMapping("/by-station/{stationId}")
-    public ResponseEntity<Object> getAllSuspectsByIncidents(){
-
-        return incidentSuspectService.getAllSuspectByStation
+    public List<SuspectDtoV2> getALLSuspectsByStation(@PathVariable int stationId){
+        return incidentSuspectService.getALLSuspectsByStation(stationId);
     }
 }
+

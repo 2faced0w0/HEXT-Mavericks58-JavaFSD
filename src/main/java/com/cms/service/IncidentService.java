@@ -1,18 +1,20 @@
 package com.cms.service;
 
-import com.cms.dto.IncidentDto;
-import com.cms.dto.IncidentOfficerDto;
-import com.cms.dto.IncidentRespDto;
+import com.cms.dto.*;
+import com.cms.enums.IncidentType;
 import com.cms.exception.ResourceNotFoundException;
 import com.cms.mapper.IncidentMapper;
 import com.cms.model.Incident;
+
 import com.cms.model.Officer;
 import com.cms.repository.IncidentRepository;
+
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /*
@@ -34,8 +36,9 @@ public class IncidentService {
     }
 
     public void addIncident(IncidentDto dto) {
-
-        Incident incident= incidentMapper.mapDtoToEntity(dto);
+        // Map the dto to Entity
+        Incident incident = incidentMapper.mapDtoToEntity(dto);
+        // Save the Entity
         incidentRepository.save(incident);
     }
 
@@ -43,18 +46,19 @@ public class IncidentService {
         return incidentRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Invalid incident id"));
     }
-    public void deleteById(int id){
-        getById(id);
+
+    public void deleteById(int id) {
+        getById(id); // validation
         incidentRepository.deleteById(id);
     }
 
-    public void update(int id, Incident updatedIncident){
-        Incident existingIncident= getById(id);
-        existingIncident.setIncidentStatus(updatedIncident.getIncidentStatus());
-        existingIncident.setIncidentType(updatedIncident.getIncidentType());
-        existingIncident.setProgressDetails(updatedIncident.getProgressDetails());
-
-        incidentRepository.save(existingIncident);
+    public void update(int id, Incident updatedIncident) {
+        Incident exisitngIncident = getById(id);
+        // set the new values given to existing incident
+        exisitngIncident.setIncidentStatus(updatedIncident.getIncidentStatus());
+        exisitngIncident.setIncidentType(updatedIncident.getIncidentType());
+        exisitngIncident.setProgressDetails(updatedIncident.getProgressDetails());
+        incidentRepository.save(exisitngIncident);
     }
 
     public IncidentRespDto getAllWithPagination(int page, int size) {
@@ -64,22 +68,33 @@ public class IncidentService {
         return incidentMapper.mapEntityToDto(pages);
     }
 
-    public void addIncidentWithOfficer(IncidentDto dto, int officerId){
+    public List<Incident> getByIncidentType(IncidentType incidentType) {
+        return incidentRepository.findByIncidentType(incidentType);
+    }
 
-        Officer officer= officerService.getById(officerId);
-        Incident incident=incidentMapper.mapDtoToEntity(dto);
+    public void addIncidentWithOfficer(IncidentDto dto, int officerId) {
+        // fetch Officer from DB based on given Id
+        Officer officer = officerService.getById(officerId);
+        // Map the dto to Entity
+        Incident incident = incidentMapper.mapDtoToEntity(dto);
+        // Attach officer to Incident
         incident.setOfficer(officer);
+        // Save the Entity
         incidentRepository.save(incident);
     }
 
     public List<IncidentOfficerDto> getIncidentByOfficerId(int officerId) {
+        // 1. write sql/jpql for this op
+        // 2. write a derived query for this op
         Officer officer = officerService.getById(officerId);
-        List<Incident> list = incidentRepository.findByOfficerId(officerId);
 
-        return list
-                .stream()
-                .map(incidentMapper::getDtoForEntity)
-                .toList();
+        List<Incident>  list =  incidentRepository.findByOfficerId(officerId);
+        //convert list<Incident> into List<IncidentOfficerDto>
+
+        return list.
+                stream()
+                .map(incidentMapper :: getDtoForEntity)
+                .toList(); //each incident will be converted into IncidentOfficerDto
     }
 
     public List<IncidentOfficerDto> getIncidentByOfficerUsername(String officerUsername) {
@@ -91,4 +106,29 @@ public class IncidentService {
                 .map(incidentMapper :: getDtoForEntity)
                 .toList(); //each incident will be converted into IncidentOfficerDto
     }
+
+    public OfficerIncidentStatRespDto getIncidentStatByType() {
+        List<IncidentTypeStatDto> list = incidentRepository.getIncidentStatByType();
+
+        //convert from List<IncidentTypeStatDto> to OfficerIncidentStatRespDto
+        List<String> typeList =  list.stream()
+                .map(IncidentTypeStatDto :: type)
+                .map(Enum::toString)
+                .toList();
+
+        List<Long> listNumber = list.stream()
+                .map(IncidentTypeStatDto :: numberOfIncidents)
+                .toList();
+
+        return new OfficerIncidentStatRespDto(
+                "IncidentType Stats",
+                typeList,
+                listNumber
+        );
+
+    }
 }
+/*
+Optional<T> is a wrapper
+which says,i may or may not give u T
+ */
