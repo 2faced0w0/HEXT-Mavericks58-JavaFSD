@@ -1,5 +1,7 @@
 package com.roadready.service;
 
+import com.roadready.dto.SignupRequestDto;
+import com.roadready.enums.Role;
 import com.roadready.model.Admin;
 import com.roadready.model.Customer;
 import com.roadready.model.RentalAgent;
@@ -7,6 +9,7 @@ import com.roadready.model.User;
 import com.roadready.repository.AdminRepository;
 import com.roadready.repository.CustomerRepository;
 import com.roadready.repository.RentalAgentRepository;
+import com.roadready.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,77 +27,72 @@ public class UserService implements UserDetailsService {
     private final CustomerRepository customerRepository;
     private final AdminRepository adminRepository;
     private final RentalAgentRepository rentalAgentRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Find the user across the three repositories
-        User user = findUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        // Maps User interface to Spring Security's UserDetails
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPasswordHash(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole())));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user =  userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("Invalid Credentials"));
+        return user;
     }
 
-    /*
-     * method to search all user tables for a matching email.
-     * Returns an Optional containing the User interface.
-     */
-    public Optional<User> findUserByEmail(String email) {
-        // Check Customers first (usually the largest table/most frequent logins)
-        Optional<? extends User> user = customerRepository.findByEmail(email);
-        if (user.isPresent())
-            return (Optional<User>) user;
-
-        // Check Admins
-        user = adminRepository.findByEmail(email);
-        if (user.isPresent())
-            return (Optional<User>) user;
-
-        // Check Rental Agents
-        user = rentalAgentRepository.findByEmail(email);
-        if (user.isPresent())
-            return (Optional<User>) user;
-
-        return Optional.empty();
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
-    public Customer createCustomer(com.roadready.dto.SignupRequestDto dto, String encodedPassword) {
-        if (findUserByEmail(dto.email()).isPresent()) {
-            throw new RuntimeException("User already exists with email: " + dto.email());
+    public Customer createCustomer(SignupRequestDto dto, String encodedPassword) {
+        if (userRepository.findByUsername(dto.email()).isPresent()) {
+            throw new com.roadready.exception.UserAlreadyExistsException(
+                    "Customer already exists with email: " + dto.email());
         }
+        User user=new User();
+        user.setRole(Role.CUSTOMER);
+        user.setUsername(dto.email());
+        user.setPassword(dto.password());
+
         Customer customer = new Customer();
-        customer.setName(dto.name());
-        customer.setEmail(dto.email());
-        customer.setPasswordHash(encodedPassword);
+        customer.setUser(user);
         customer.setPhoneNumber(dto.phoneNumber());
+        customer.setName(dto.name());
+
         return customerRepository.save(customer);
     }
 
-    public Admin createAdmin(com.roadready.dto.SignupRequestDto dto, String encodedPassword) {
-        if (findUserByEmail(dto.email()).isPresent()) {
-            throw new RuntimeException("User already exists with email: " + dto.email());
+    public Admin createAdmin(SignupRequestDto dto, String encodedPassword) {
+        if (userRepository.findByUsername(dto.email()).isPresent()) {
+            throw new com.roadready.exception.UserAlreadyExistsException(
+                    "Admin already exists with email: " + dto.email());
         }
+        User user=new User();
+        user.setRole(Role.ADMIN);
+        user.setUsername(dto.email());
+        user.setPassword(dto.password());
+        save(user);
+
         Admin admin = new Admin();
         admin.setName(dto.name());
-        admin.setEmail(dto.email());
-        admin.setPasswordHash(encodedPassword);
         admin.setPhoneNumber(dto.phoneNumber());
+        admin.setUser(user);
+
         return adminRepository.save(admin);
     }
 
-    public RentalAgent createRentalAgent(com.roadready.dto.SignupRequestDto dto, String encodedPassword, Admin admin) {
-        if (findUserByEmail(dto.email()).isPresent()) {
-            throw new RuntimeException("User already exists with email: " + dto.email());
+    public RentalAgent createRentalAgent(SignupRequestDto dto, String encodedPassword, Admin admin) {
+        if (userRepository.findByUsername(dto.email()).isPresent()) {
+            throw new com.roadready.exception.UserAlreadyExistsException(
+                    "Agent already exists with email: " + dto.email());
         }
+        User user=new User();
+        user.setRole(Role.AGENT);
+        user.setUsername(dto.email());
+        user.setPassword(dto.password());
+        save(user);
+
         RentalAgent agent = new RentalAgent();
         agent.setName(dto.name());
-        agent.setEmail(dto.email());
-        agent.setPasswordHash(encodedPassword);
         agent.setPhoneNumber(dto.phoneNumber());
         agent.setAdmin(admin);
+
         return rentalAgentRepository.save(agent);
     }
 }

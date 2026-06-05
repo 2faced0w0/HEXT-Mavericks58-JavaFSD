@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import com.roadready.service.UserService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -39,9 +42,9 @@ public class SecurityConfig {
                                                                                                                       // without
                                                                                                                       // auth
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restricted to ADMIN
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles/add")
-                        .hasAnyRole("ADMIN", "AGENT") // Restricted to ADMIN or AGENT
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles/add").hasAnyRole("ADMIN", "AGENT") // Restricted to ADMIN or AGENT
                         .requestMatchers("/error").permitAll() // Expose actual errors instead of 403
+                        .requestMatchers(("/{customerId}/past")).hasAnyRole("ADMIN", "AGENT")
                         .anyRequest().authenticated())
                 .httpBasic(org.springframework.security.config.Customizer.withDefaults());
 
@@ -51,9 +54,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationProvider authenticationProvider(UserService userService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
     }
 
     @Bean

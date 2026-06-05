@@ -1,15 +1,42 @@
 package com.roadready.model;
 
 import com.roadready.enums.Role;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public interface User {
-    Integer getId();
+import java.util.Collection;
+import java.util.List;
 
-    String getName();
+@Entity
+@Getter
+@Setter
+@Table(name = "login_info")
+@AllArgsConstructor
+@NoArgsConstructor
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    String getEmail();
+    @Column(name = "email", nullable = false, unique = true)
+    private String username;
 
-    String getPasswordHash();
+    @Column(name = "password_hash", nullable = false)
+    private String password;
 
-    Role getRole();
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Convert ur role to Spring's Authority
+        SimpleGrantedAuthority sga = new SimpleGrantedAuthority(role.toString());
+        return List.of(sga);
+    }
 }

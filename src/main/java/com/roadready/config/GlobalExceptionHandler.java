@@ -89,4 +89,15 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(responseUtility);
     }
+
+    //UserAlreadyExistsException
+    @ExceptionHandler(com.roadready.exception.UserAlreadyExistsException.class)
+    public ResponseEntity<ResponseUtility> handleUserAlreadyExistsException(
+            com.roadready.exception.UserAlreadyExistsException e
+    ){
+        responseUtility.setMessage(e.getMessage());
+        return ResponseEntity
+                .status(org.springframework.http.HttpStatus.CONFLICT)
+                .body(responseUtility);
+    }
 }

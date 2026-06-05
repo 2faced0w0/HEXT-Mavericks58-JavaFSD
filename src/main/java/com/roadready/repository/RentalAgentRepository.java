@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface RentalAgentRepository extends JpaRepository<RentalAgent, Integer> {
-    Optional<RentalAgent> findByEmail(String email);
+
+
 }
