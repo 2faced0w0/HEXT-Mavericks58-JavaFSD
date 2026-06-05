@@ -52,8 +52,9 @@ public class IncidentSuspectController {
      * officerName
      * stationTitle
      * */
-    @GetMapping("/by-station/{stationId}")
-    public List<SuspectDtoV2> getALLSuspectsByStation(@PathVariable int stationId){
-        return incidentSuspectService.getALLSuspectsByStation(stationId);
-    }
+//    @GetMapping("/by-station/{stationId}")
+//    public List<SuspectDtoV2> getALLSuspectsByStation(@PathVariable int stationId){
+//        return incidentSuspectService.getALLSuspectsByStation(stationId);
+//    }
 }
+

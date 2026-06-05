@@ -1,5 +1,6 @@
 package com.cms.repository;
 
+import com.cms.dto.IncidentOfficerStatJpqlDto;
 import com.cms.model.Officer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,8 +24,14 @@ public interface OfficerRepository extends JpaRepository<Officer,Integer> {
             where i.id = ?1
             """) // since we wanted to go backwards from Officer to Incident, we used join
     Officer getByIncidentId(int incidentId);
+
+    @Query("""
+            select i.officer.name as name, count(i.id) as numberOfIncidents
+            from Incident i
+            group by i.officer.id
+            """)
+    List<IncidentOfficerStatJpqlDto> incidentByOfficerStat();
 }
-// select o from Officer o where o.user.username=?1
 // select o from Officer o where o.user.username=?1
 
 /*

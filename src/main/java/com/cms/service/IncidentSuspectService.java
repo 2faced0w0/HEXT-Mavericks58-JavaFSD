@@ -59,7 +59,7 @@ public class IncidentSuspectService {
          * */
     }
 
-    public List<SuspectDtoV2> getALLSuspectsByStation(int stationId) {
-        return incidentSuspectRepository.getAllSuspectsByStation(stationId);
-    }
+//    public List<SuspectDtoV2> getALLSuspectsByStation(int stationId) {
+//        return incidentSuspectRepository.getAllSuspectsByStation(stationId);
+//    }
 }

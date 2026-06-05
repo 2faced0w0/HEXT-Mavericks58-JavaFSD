@@ -33,5 +33,5 @@ public interface IncidentSuspectRepository extends JpaRepository<IncidentSuspect
             join o.station stn
             where stn.id=?1
             """)
-    List<SuspectDtoV2> getAllSuspectsByStation(int stationId); // DTO projection from JPQL
+    List<SuspectDtoV2> getALLSuspectsByStation(int stationId); // DTO projection from JPQL
 }
