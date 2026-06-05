@@ -1,0 +1,44 @@
+# HireTrack - Project Context Transfer
+
+## Project Overview
+HireTrack is a Spring Boot Job Portal REST API where job seekers can browse and apply for jobs posted by employers. 
+- Tech Stack: Spring Boot, Spring Data JPA, Spring Security (JWT), MySQL, Lombok.
+- Database: MySQL configured with `ddl-auto=update`.
+
+## 1. Entities (Fully Implemented)
+- `User`: Handles authentication. Fields: `id`, `username`, `password`, `role` (Enum: EMPLOYER, SEEKER).
+- `Employer`: Fields: `id`, `companyName`, mapped OneToOne to `User`.
+- `JobSeeker`: Fields: `id`, `name`, `email`, `password`, `resumeSummary`, mapped OneToOne to `User`.
+- `Job`: Fields: `id`, `title`, `description`, `location`, `salary` (Double), mapped ManyToOne to `Employer`.
+- `Application`: Join entity. Fields: `id`, `appliedAt`, mapped ManyToOne to `JobSeeker` and `Job`.
+
+## 2. Repositories (Fully Implemented)
+All entities have corresponding Spring Data JPA repositories extending `JpaRepository<Entity, Integer>`.
+- `UserRepository` (has `findByUsername(String)`)
+- `EmployerRepository` (has `findByUser(User)`)
+- `JobSeekerRepository` (has `Optional<JobSeeker> findByUser(User)`)
+- `JobRepository` (has `findAll(Pageable)` and several property-based search finders)
+- `ApplicationRepository` (has `Page<Application> findByJobSeeker(JobSeeker, Pageable)`)
+
+## 3. Services (Partially Implemented)
+- `ApplicationService`: Fully implemented `applyForJob(int jobId, String username)` which securely links the logged-in User's JobSeeker profile to a Job and saves the application.
+- `AuthService` / `UserService` / `JobService`: Skeletons exist but need their core business logic written.
+
+## 4. Controllers (In Progress)
+`AppController` is currently the main REST controller (`@RequestMapping("/api")`).
+- `POST /applications` - **Completed**. Uses `@RequestParam int jobId` and `Principal` to securely apply for a job.
+- `POST /signup/jobseeker` - **Incomplete**. Currently stubbed out with syntax errors (missing semi-colons and logic).
+- `GET /auth/login` - **Incomplete**. Missing method body, logic, and parameters.
+
+## 5. Security Configuration
+- `SecurityConfig.java` is active. It configures a `SecurityFilterChain` that relies on a custom `JwtFilter`.
+- It currently uses `NoOpPasswordEncoder` for simplicity.
+- `DaoAuthenticationProvider` is wired up using `UserService`.
+
+## 6. Current Blockers & Next Steps
+1. **Fix Syntax Errors in AppController**: The `signup` and `login` methods are currently incomplete and will prevent the application from compiling.
+2. **Implement Registration (`POST /api/auth/register`)**: Needs to handle creating a `User` (with role) and either an `Employer` or `JobSeeker` profile based on the request body.
+3. **Implement Login (`POST /api/auth/login`)**: Needs to authenticate the user and return a JWT Token string inside a `TokenDto`.
+4. **Implement Post Job (`POST /api/jobs`)**: Requires EMPLOYER role. Must validate `title`, `description`, `location`, and `salary` via a `CreateJobRequest` DTO and associate the job with the logged-in Employer.
+5. **Implement Get Jobs (`GET /api/jobs`)**: Requires SEEKER or EMPLOYER role. Needs to return paginated jobs mapped to a `JobResponse` DTO.
+6. **Implement Get My Applications (`GET /api/my-applications`)**: Requires SEEKER role. Return paginated applications for the logged-in user mapped to an `ApplicationResponse` DTO.
