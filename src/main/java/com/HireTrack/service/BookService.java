@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class BookService {
@@ -17,10 +19,12 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
-    public Page<BookResponseDto> getBooksByAuthorName(String authorname, int page, int size) {
+    public List<BookResponseDto> getBooksByAuthorName(int page, int size, String authorname) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Book> books = bookRepository.findByAuthor_Name(authorname, pageable);
+        Page<Book> books = bookRepository.findByAuthorName(authorname, pageable);
 
-        return books.map(bookMapper::mapEntityToDto);
+        return books.stream()
+                .map(bookMapper::entityToDto)
+                .toList();
     }
 }

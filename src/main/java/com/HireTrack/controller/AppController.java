@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 @RestController
@@ -81,14 +83,12 @@ public class AppController {
         return ResponseEntity.ok(response);
     }
 
-     @GetMapping("/book-by-author")
-     public ResponseEntity<Page<BookResponseDto>> getBooksByAuthorName(
-         @RequestParam int page,
-         @RequestParam int size,
-         @RequestBody String authorname
-     ){
-         Page<BookResponseDto> response=
-         bookService.getBooksByAuthorName(authorname, page, size);
-         return ResponseEntity.ok(response);
-     }
+    @GetMapping("/book-by-authorname")
+    public List<BookResponseDto> getBooksByAuthorName(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            Principal principal
+    ) {
+        return bookService.getBooksByAuthorName(page, size, principal.getName());
+    }
 }
