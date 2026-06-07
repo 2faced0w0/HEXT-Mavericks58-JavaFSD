@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/jobs").hasAnyAuthority("SEEKER", "EMPLOYER")
                         .requestMatchers("/api/applications").hasAuthority("SEEKER")
                         .requestMatchers("/api/my-applications").hasAuthority("SEEKER")
+                        .requestMatchers(HttpMethod.GET, "/api/products-by-category").permitAll()
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

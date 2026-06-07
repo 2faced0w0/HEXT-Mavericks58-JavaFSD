@@ -2,10 +2,7 @@ package com.HireTrack.controller;
 
 import com.HireTrack.dto.*;
 import com.HireTrack.model.User;
-import com.HireTrack.service.ApplicationService;
-import com.HireTrack.service.BookService;
-import com.HireTrack.service.JobService;
-import com.HireTrack.service.UserService;
+import com.HireTrack.service.*;
 import com.HireTrack.utility.JwtUtility;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +23,7 @@ public class AppController {
     private final ApplicationService applicationService;
     private final JwtUtility jwtUtility;
     private final BookService bookService;
+    private final ProductService productService;
 
     @PostMapping("/auth/register")
     public ResponseEntity<String> signup(@RequestBody SignupRequestDto dto) {
@@ -90,5 +88,26 @@ public class AppController {
             Principal principal
     ) {
         return bookService.getBooksByAuthorName(page, size, principal.getName());
+    }
+
+    /*
+    Create a GET API to fetch the products based on Category name(Take it as request param)
+- Create a Response DTO(ProductResponseDto) having
+(productId,
+ productName,
+ categoryName,
+ productPrice)
+
+The response of the API should be List<ProductResponseDto>
+Add pagination to the API
+     */
+
+    @GetMapping("/products-by-category")
+    public List<ProductResponseDto> getProductsByCategory(
+            @RequestParam String category,
+            @RequestParam int page,
+            @RequestParam int size
+    ){
+        return productService.getProductsByCategory(page, size, category);
     }
 }
