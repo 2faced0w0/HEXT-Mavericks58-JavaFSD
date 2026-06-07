@@ -30,7 +30,6 @@ public class AdminController {
 
     @PostMapping("/create-agent")
     public ResponseEntity<String> createAgent(@RequestBody SignupRequestDto dto, Principal principal) {
-        User user = (User)userService.loadUserByUsername(principal.getName());
         Admin admin = (Admin) adminService.loadUserByUsername(principal.getName());
         userService.createRentalAgent(dto, passwordEncoder.encode(dto.password()), admin);
         return ResponseEntity.ok("Rental Agent created successfully.");
