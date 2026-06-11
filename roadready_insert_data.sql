@@ -6,25 +6,25 @@ USE roadready_db;
 -- ==========================================================
 -- 0. Insert Login Info (Shared Credentials)
 -- ==========================================================
-INSERT INTO login_info (email, password_hash, role) VALUES
+INSERT INTO login_info (email, password_hash, role, is_active) VALUES
 -- Customers (IDs 1-5)
-('john.doe@example.com', 'hashed_pass_123', 'CUSTOMER'),
-('jane.smith@example.com', 'hashed_pass_456', 'CUSTOMER'),
-('michael.j@example.com', 'hashed_pass_789', 'CUSTOMER'),
-('emily.clark@example.com', 'hashed_pass_321', 'CUSTOMER'),
-('robert.w@example.com', 'hashed_pass_654', 'CUSTOMER'),
+('john.doe@example.com', 'hashed_pass_123', 'CUSTOMER', TRUE),
+('jane.smith@example.com', 'hashed_pass_456', 'CUSTOMER', TRUE),
+('michael.j@example.com', 'hashed_pass_789', 'CUSTOMER', TRUE),
+('emily.clark@example.com', 'hashed_pass_321', 'CUSTOMER', TRUE),
+('robert.w@example.com', 'hashed_pass_654', 'CUSTOMER', TRUE),
 -- Admins (IDs 6-10)
-('admin@roadready.com', 'hashed_admin_pass', 'ADMIN'),
-('bob@roadready.com', 'hashed_admin_pass2', 'ADMIN'),
-('charlie@roadready.com', 'hashed_admin_pass3', 'ADMIN'),
-('diana@roadready.com', 'hashed_admin_pass4', 'ADMIN'),
-('ethan@roadready.com', 'hashed_admin_pass5', 'ADMIN'),
+('admin@roadready.com', 'hashed_admin_pass', 'ADMIN', TRUE),
+('bob@roadready.com', 'hashed_admin_pass2', 'ADMIN', TRUE),
+('charlie@roadready.com', 'hashed_admin_pass3', 'ADMIN', TRUE),
+('diana@roadready.com', 'hashed_admin_pass4', 'ADMIN', TRUE),
+('ethan@roadready.com', 'hashed_admin_pass5', 'ADMIN', TRUE),
 -- Rental Agents (IDs 11-15)
-('tom@roadready.com', 'hashed_agent_1', 'AGENT'),
-('sarah@roadready.com', 'hashed_agent_2', 'AGENT'),
-('mike@roadready.com', 'hashed_agent_3', 'AGENT'),
-('dave@roadready.com', 'hashed_agent_4', 'AGENT'),
-('lisa@roadready.com', 'hashed_agent_5', 'AGENT');
+('tom@roadready.com', 'hashed_agent_1', 'AGENT', TRUE),
+('sarah@roadready.com', 'hashed_agent_2', 'AGENT', TRUE),
+('mike@roadready.com', 'hashed_agent_3', 'AGENT', TRUE),
+('dave@roadready.com', 'hashed_agent_4', 'AGENT', TRUE),
+('lisa@roadready.com', 'hashed_agent_5', 'AGENT', TRUE);
 
 -- ==========================================================
 -- 1. Insert Customers
@@ -64,17 +64,21 @@ INSERT INTO brands (brand_name) VALUES
 ('Honda'),
 ('Ford'),
 ('BMW'),
-('Tesla');
+('Tesla'),
+('Yamaha'),
+('Vespa');
 
 -- ==========================================================
 -- 5. Insert Vehicles
 -- ==========================================================
-INSERT INTO vehicles (brand_id, agent_id, model, specifications, pricing_per_day, is_available, image_url, location) VALUES
-(1, 1, 'Camry', 'Automatic, Petrol, 5 Seats', 55.00, TRUE, 'camry.jpg', 'Downtown Center, NY'),
-(2, 2, 'CR-V', 'Automatic, Hybrid, 5 Seats', 70.00, TRUE, 'crv.jpg', 'Airport Terminal, NY'),
-(3, 3, 'Mustang', 'Manual, Petrol, 4 Seats', 95.00, TRUE, 'mustang.jpg', 'Downtown Center, NY'),
-(4, 4, '3 Series', 'Automatic, Petrol, 5 Seats', 110.00, TRUE, '3series.jpg', 'Uptown Branch, NY'),
-(5, 5, 'Model 3', 'Automatic, Electric, 5 Seats', 85.00, FALSE, 'model3.jpg', 'Airport Terminal, NY');
+INSERT INTO vehicles (brand_id, agent_id, model, specifications, pricing_per_day, is_available, image_url, location, vehicle_type, sub_type) VALUES
+(1, 1, 'Camry', 'Automatic, Petrol, 5 Seats', 55.00, TRUE, 'camry.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(2, 2, 'CR-V', 'Automatic, Hybrid, 5 Seats', 70.00, TRUE, 'crv.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Petrol'),
+(3, 3, 'Mustang', 'Manual, Petrol, 4 Seats', 95.00, TRUE, 'mustang.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(4, 4, '3 Series', 'Automatic, Petrol, 5 Seats', 110.00, TRUE, '3series.jpg', 'Uptown Branch, NY', '4 Wheeler', 'Petrol'),
+(5, 5, 'Model 3', 'Automatic, Electric, 5 Seats', 85.00, FALSE, 'model3.jpg', 'Airport Terminal, NY', '4 Wheeler', 'EV'),
+(6, 1, 'YZF R3', 'Manual, Petrol, 2 Seats', 40.00, TRUE, 'r3.jpg', 'Downtown Center, NY', '2 Wheeler', 'Bike'),
+(7, 2, 'GTS 300', 'Automatic, Petrol, 2 Seats', 30.00, TRUE, 'vespa.jpg', 'Downtown Center, NY', '2 Wheeler', 'Scooty');
 
 -- ==========================================================
 -- 6. Insert Reservations

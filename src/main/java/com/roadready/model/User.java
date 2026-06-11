@@ -33,10 +33,18 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active = true;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Convert ur role to Spring's Authority
         SimpleGrantedAuthority sga = new SimpleGrantedAuthority(role.toString());
         return List.of(sga);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 }

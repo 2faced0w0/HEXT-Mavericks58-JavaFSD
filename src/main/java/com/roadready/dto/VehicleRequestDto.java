@@ -15,6 +15,8 @@ public record VehicleRequestDto(
         String imageUrl,
         String location,
         @NotNull(message = "Go get a agent id first you un-authenticated baboon")
-        Integer agentId
+        Integer agentId,
+        String vehicleType,
+        String subType
 ) {
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/maintenance")
 public class MaintenanceRecordController {
@@ -27,5 +28,12 @@ public class MaintenanceRecordController {
         
         PaginatedResponse<MaintenanceRecordDto> records = maintenanceRecordService.getMaintenanceRecords(vehicleId, agentId, pageable);
         return ResponseEntity.ok(records);
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
+    public ResponseEntity<MaintenanceRecordDto> addMaintenanceRecord(@RequestBody com.roadready.dto.MaintenanceRequestDto dto) {
+        MaintenanceRecordDto record = maintenanceRecordService.addMaintenanceRecord(dto);
+        return ResponseEntity.ok(record);
     }
 }

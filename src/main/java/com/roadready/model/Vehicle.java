@@ -43,6 +43,12 @@ public class Vehicle {
     @Column(nullable = false)
     private String location;
 
+    @Column(name = "vehicle_type")
+    private String vehicleType;
+
+    @Column(name = "sub_type")
+    private String subType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id", nullable = false)
     private RentalAgent agent;

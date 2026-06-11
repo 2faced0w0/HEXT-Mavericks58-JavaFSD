@@ -12,6 +12,8 @@ public record VehicleDto(
         BigDecimal pricingPerDay,
         Boolean isAvailable,
         String imageUrl,
-        String location
+        String location,
+        String vehicleType,
+        String subType
 ) {
 }

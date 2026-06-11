@@ -11,6 +11,10 @@ public interface VehicleService {
             BigDecimal maxPrice,
             String brandName,
             String location,
+            java.time.LocalDateTime startDate,
+            java.time.LocalDateTime endDate,
+            String vehicleType,
+            String subType,
             Pageable pageable);
 
     VehicleDto addVehicle(com.roadready.dto.VehicleRequestDto dto);

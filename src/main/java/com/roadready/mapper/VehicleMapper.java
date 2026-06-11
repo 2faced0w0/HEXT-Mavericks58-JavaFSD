@@ -23,7 +23,9 @@ public class VehicleMapper {
                 vehicle.getPricingPerDay(),
                 vehicle.getIsAvailable(),
                 vehicle.getImageUrl(),
-                vehicle.getLocation()
+                vehicle.getLocation(),
+                vehicle.getVehicleType(),
+                vehicle.getSubType()
         );
     }
 
@@ -41,6 +43,8 @@ public class VehicleMapper {
         vehicle.setIsAvailable(dto.isAvailable());
         vehicle.setImageUrl(dto.imageUrl());
         vehicle.setLocation(dto.location());
+        vehicle.setVehicleType(dto.vehicleType());
+        vehicle.setSubType(dto.subType());
         return vehicle;
     }
 }

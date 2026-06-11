@@ -39,6 +39,8 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setLocation(dto.location());
         vehicle.setAgent(agent);
         vehicle.setIsAvailable(true);
+        vehicle.setVehicleType(dto.vehicleType());
+        vehicle.setSubType(dto.subType());
 
         vehicle = vehicleRepository.save(vehicle);
         return vehicleMapper.mapEntityToDto(vehicle);
@@ -46,8 +48,8 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public PaginatedResponse<VehicleDto> searchVehicles(String model, BigDecimal maxPrice, String brandName,
-            String location, Pageable pageable) {
-        Page<VehicleDto> vehiclePage = vehicleRepository.searchVehicles(model, maxPrice, brandName, location, pageable);
+            String location, java.time.LocalDateTime startDate, java.time.LocalDateTime endDate, String vehicleType, String subType, Pageable pageable) {
+        Page<VehicleDto> vehiclePage = vehicleRepository.searchVehicles(model, maxPrice, brandName, location, startDate, endDate, vehicleType, subType, pageable);
         return new PaginatedResponse<>(
                 vehiclePage.getContent(),
                 vehiclePage.getNumber(),
