@@ -1,0 +1,90 @@
+/* Core Overrides */
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* Navbar Link Hover Properties */
+.navbar-link {
+    border-bottom: 2px solid transparent;
+}
+.navbar-link:hover {
+    color: #0d6efd !important;
+    border-bottom: 2px solid #0d6efd;
+}
+/* Ensure the central component spreads wide open */
+/* Instruct the central content element block to fully expand horizontally */
+.dashboard-content, .widget-container {
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Custom CMS Logo Styling */
+.cms-logo {
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+/* Structural Layout Restrictions */
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+/* Component Level Styles */
+.avatar {
+    width: 60px;
+    height: 60px;
+    letter-spacing: 0.05em;
+}
+
+.border-dashed {
+    border: 2px dashed rgba(33, 37, 41, 0.15) !important;
+}
+
+.metric-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.chart-mock-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(33, 37, 41, 0.03);
+    border: 1px dashed rgba(33, 37, 41, 0.1);
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom Fallback Utilities */
+.fs-7 {
+    font-size: 0.8rem !important;
+}
+.fs-8 {
+    font-size: 0.7rem !important;
+}
+.leading-none {
+    line-height: 1;
+}
+.tracking-wider {
+    letter-spacing: 0.06em;
+}
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
