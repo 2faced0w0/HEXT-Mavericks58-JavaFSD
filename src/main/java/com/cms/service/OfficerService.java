@@ -5,21 +5,21 @@ import com.cms.dto.OfficerIncidentStatRespDto;
 import com.cms.dto.OfficerReqDto;
 import com.cms.dto.OfficerResponseDto;
 import com.cms.enums.Role;
-import com.cms.exception.FileNotFoundException;
 import com.cms.exception.ResourceNotFoundException;
+import com.cms.exception.UserAlreadyPresentException;
 import com.cms.mapper.OfficerMapper;
 import com.cms.model.Officer;
 import com.cms.model.User;
 import com.cms.repository.OfficerRepository;
 import com.cms.utility.FileUtility;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,13 +27,16 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OfficerService {
 
     private final OfficerRepository officerRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private static final String UPLOAD_LOC = "C:/Users/HP/Documents/java-fsd-hex-may-2026/uploads";
+
+    @Value("${officer.password.temp}")
+    private String officerTempPassword;
 
     public Officer getById(int officerId) {
         return officerRepository.findById(officerId)
@@ -60,12 +63,17 @@ public class OfficerService {
 
         // Step 1: Extract user info:  username.password from dto
         String username = officerReqDto.username();
-        String password = officerReqDto.password();
+        String password = officerTempPassword;
         Role role = Role.OFFICER;
+
+        // Step 1.5 Check forUsername uniqueness
+        User user = (User) userService.loadUserByUsername(username);
+        if(user != null)
+            throw new UserAlreadyPresentException("Username is already taken, use a different username");
 
         // Step 2: Encode the password and assign Role
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User();
+        user = new User();
         user.setUsername(username);
         user.setPassword(encodedPassword);
         user.setRole(role);

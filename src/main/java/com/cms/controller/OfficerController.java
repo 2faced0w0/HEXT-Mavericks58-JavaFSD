@@ -4,6 +4,7 @@ import com.cms.dto.OfficerIncidentStatRespDto;
 import com.cms.dto.OfficerReqDto;
 import com.cms.dto.OfficerResponseDto;
 import com.cms.service.OfficerService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/officer")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class OfficerController {
 
     private final OfficerService officerService;
@@ -35,7 +37,7 @@ List of Officers:
      * name, username, password
      * */
     @PostMapping("/add")
-    public void postOfficer(@RequestBody OfficerReqDto officerReqDto){
+    public void postOfficer(@Valid @RequestBody OfficerReqDto officerReqDto){
         officerService.postOfficer(officerReqDto);
     }
 

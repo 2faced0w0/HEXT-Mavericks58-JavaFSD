@@ -8,13 +8,11 @@ import jakarta.validation.constraints.Size;
 public record OfficerReqDto(
         @NotNull
         @NotBlank
+        @Size(min = 4 , message = "Name should be at-least 4 characters")
         String name,
         @NotNull
         @NotBlank
-        @Size(min = 4)
-        String username,
-        @NotNull
-        @NotBlank
-        String password
+        @Size(min = 4, message = "Username should be at-least 4 characters")
+        String username
 ) {
 }

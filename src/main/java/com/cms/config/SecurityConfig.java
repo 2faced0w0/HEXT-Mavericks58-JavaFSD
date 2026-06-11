@@ -51,10 +51,18 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) /// Spring needs this for POST,PUT & DELETE
                 //.csrf(ref->ref.disable())
                 .authorizeHttpRequests(authorize -> authorize
+                                // Preflight request enabled
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                // Auth APIs
                                 .requestMatchers(HttpMethod.GET, "/api/auth/login").authenticated()
+                                .requestMatchers(HttpMethod.GET, "api/auth/user-details").authenticated()
+
                                 .requestMatchers(HttpMethod.POST, "/api/officer/add").permitAll()
+                                // Officer SignUp
+                                .requestMatchers(HttpMethod.POST, "/api/officer/add").hasAuthority("STATION_HEAD")
 
                                 .requestMatchers(HttpMethod.GET, "/api/station/by-incident/{incidentId}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "api/auth/user-details").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/incident/suspect/by-incident/{incidentId}").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/incident/all/v2").hasAuthority("OFFICER")
                                 .requestMatchers(HttpMethod.GET, "/api/incident/get-one/{id}").hasAnyAuthority("OFFICER", "STATION_HEAD")
