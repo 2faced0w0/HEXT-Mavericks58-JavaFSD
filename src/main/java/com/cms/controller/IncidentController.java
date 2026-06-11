@@ -5,15 +5,14 @@ import com.cms.dto.IncidentOfficerDto;
 import com.cms.dto.IncidentRespDto;
 import com.cms.dto.OfficerIncidentStatRespDto;
 import com.cms.enums.IncidentType;
-import com.cms.exception.ResourceNotFoundException;
 import com.cms.model.Incident;
 import com.cms.service.IncidentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 /*
@@ -27,6 +26,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/incident")
+@CrossOrigin(origins = "http://localhost:5173")
 public class IncidentController {
 
     private final IncidentService incidentService;
@@ -64,11 +64,6 @@ public class IncidentController {
         incidentService.deleteById(id);
     }
 
-    @PutMapping("/update/{id}")
-    public void update(@PathVariable int id,
-                       @RequestBody Incident updatedIncident){
-        incidentService.update(id, updatedIncident);
-    }
 
     @GetMapping("/type")
     public List<Incident> getByIncidentType(@RequestParam IncidentType incidentType){
@@ -86,7 +81,8 @@ public class IncidentController {
     }
 
     @GetMapping("/stat/by-type")
-    public OfficerIncidentStatRespDto getIncidentStatByType(){
-        return incidentService.getIncidentStatByType();
+    public OfficerIncidentStatRespDto getIncidentStatByType(Principal principal){
+        String stationHeadUsername = principal.getName();
+        return incidentService.getIncidentStatByType(stationHeadUsername);
     }
 }

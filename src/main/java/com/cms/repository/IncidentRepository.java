@@ -34,8 +34,22 @@ public interface IncidentRepository extends JpaRepository<Incident, Integer> {
     @Query("""
             select i.incidentType as type, count(i.id) as numberOfIncidents
             from Incident i
+            join i.officer o
+            join o.station s
+            join s.stationHead sh
+            join sh.user u
+            where u.username = ?1
             group by i.incidentType
             """)
-    List<IncidentTypeStatDto> getIncidentStatByType();
-    /* findBy : select * from Incident where officer.id=?1 */
+    List<IncidentTypeStatDto> getIncidentStatByType(String username);
+    /* findBy : select * from Incident where officer.id=?1
+        select*
+        from*
+        where
+        group by
+        having
+        order by
+        limit
+
+    *  */
 }

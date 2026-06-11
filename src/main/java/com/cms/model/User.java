@@ -30,8 +30,10 @@ public class User implements UserDetails { //User is-a User-Details
     @Enumerated(EnumType.STRING)
     private Role role;
     @CreationTimestamp
+    @Column(nullable = false, updatable = false, name = "created_at")
     private Instant createdAt;
     @UpdateTimestamp
+    @Column(nullable = false, updatable = false, name = "updated_at")
     private Instant updatedAt;
 
     @Override

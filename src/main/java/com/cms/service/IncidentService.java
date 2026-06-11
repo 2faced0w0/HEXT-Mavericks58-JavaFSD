@@ -10,6 +10,8 @@ import com.cms.model.Officer;
 import com.cms.repository.IncidentRepository;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,8 @@ for all other classes including util use @Component
 @Service
 @AllArgsConstructor
 public class IncidentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(IncidentService.class);
 
     private final IncidentRepository incidentRepository;
     private final IncidentMapper incidentMapper;
@@ -52,14 +56,6 @@ public class IncidentService {
         incidentRepository.deleteById(id);
     }
 
-    public void update(int id, Incident updatedIncident) {
-        Incident exisitngIncident = getById(id);
-        // set the new values given to existing incident
-        exisitngIncident.setIncidentStatus(updatedIncident.getIncidentStatus());
-        exisitngIncident.setIncidentType(updatedIncident.getIncidentType());
-        exisitngIncident.setProgressDetails(updatedIncident.getProgressDetails());
-        incidentRepository.save(exisitngIncident);
-    }
 
     public IncidentRespDto getAllWithPagination(int page, int size) {
         // prepare the Pageable object using PageRequest.
@@ -86,7 +82,7 @@ public class IncidentService {
     public List<IncidentOfficerDto> getIncidentByOfficerId(int officerId) {
         // 1. write sql/jpql for this op
         // 2. write a derived query for this op
-        Officer officer = officerService.getById(officerId);
+        officerService.getById(officerId);
 
         List<Incident>  list =  incidentRepository.findByOfficerId(officerId);
         //convert list<Incident> into List<IncidentOfficerDto>
@@ -98,7 +94,7 @@ public class IncidentService {
     }
 
     public List<IncidentOfficerDto> getIncidentByOfficerUsername(String officerUsername) {
-        Officer officer = officerService.getByUsername(officerUsername);
+        officerService.getByUsername(officerUsername);
         // List<Incident>  list = incidentRepository.findByOfficerUserUsername(officerUsername);
         List<Incident>  list = incidentRepository.getByOfficerUserUsernameJpql(officerUsername);
         return list.
@@ -107,9 +103,10 @@ public class IncidentService {
                 .toList(); //each incident will be converted into IncidentOfficerDto
     }
 
-    public OfficerIncidentStatRespDto getIncidentStatByType() {
-        List<IncidentTypeStatDto> list = incidentRepository.getIncidentStatByType();
+    public OfficerIncidentStatRespDto getIncidentStatByType(String stationHeadUsername) {
+        List<IncidentTypeStatDto> list = incidentRepository.getIncidentStatByType(stationHeadUsername);
 
+        logger.info(list.toString());
         //convert from List<IncidentTypeStatDto> to OfficerIncidentStatRespDto
         List<String> typeList =  list.stream()
                 .map(IncidentTypeStatDto :: type)

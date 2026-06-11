@@ -61,6 +61,10 @@ public class SecurityConfig {
                                 // Officer SignUp
                                 .requestMatchers(HttpMethod.POST, "/api/officer/add").hasAuthority("STATION_HEAD")
 
+                                //SH Stat
+                                .requestMatchers(HttpMethod.POST, "/api/station-head/stats").hasAuthority("STATION_HEAD")
+                                .requestMatchers(HttpMethod.GET, "/api/incident/stat/by-type").hasAuthority("STATION_HEAD")
+
                                 .requestMatchers(HttpMethod.GET, "/api/station/by-incident/{incidentId}").permitAll()
                                 .requestMatchers(HttpMethod.GET, "api/auth/user-details").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/api/incident/suspect/by-incident/{incidentId}").authenticated()
