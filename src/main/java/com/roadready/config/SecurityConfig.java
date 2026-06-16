@@ -1,11 +1,8 @@
 package com.roadready.config;
 
 import org.springframework.security.crypto.password.*;
-import com.roadready.config.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import com.roadready.service.UserService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -36,15 +34,15 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Allow login-signup auth endpoints for all
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/vehicles/search").permitAll() // Allow
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles/search").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/vehicles/brands").permitAll()// Allow
+                        .requestMatchers("/api/reservations/**").hasAuthority("CUSTOMER")
                                                                                                                       // vehicle
-                                                                                                                      // search
-                                                                                                                      // without
                                                                                                                       // auth
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restricted to ADMIN
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles/add").hasAnyRole("ADMIN", "AGENT") // Restricted to ADMIN or AGENT
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Restricted to ADMIN
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/vehicles/add").hasAnyAuthority("ADMIN", "AGENT") // Restricted to ADMIN or AGENT
                         .requestMatchers("/error").permitAll() // Expose actual errors instead of 403
-                        .requestMatchers(("/{customerId}/past")).hasAnyRole("ADMIN", "AGENT")
+                        .requestMatchers(("/{customerId}/past")).hasAnyAuthority("ADMIN", "AGENT")
                         .anyRequest().authenticated())
                 .httpBasic(org.springframework.security.config.Customizer.withDefaults());
 

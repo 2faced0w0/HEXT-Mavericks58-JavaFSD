@@ -11,6 +11,7 @@ import com.roadready.repository.CustomerRepository;
 import com.roadready.repository.ReservationRepository;
 import com.roadready.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,8 +59,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getPastReservations(Integer customerId, org.springframework.data.domain.Pageable pageable) {
-        org.springframework.data.domain.Page<ReservationResponseDto> page = reservationRepository.findPastReservationsByCustomerId(customerId, pageable);
+    public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getReservations(Integer customerId, org.springframework.data.domain.Pageable pageable) {
+        Page<ReservationResponseDto> page = reservationRepository.findReservationsByCustomerId(customerId, pageable);
         return new com.roadready.dto.PaginatedResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -68,26 +69,6 @@ public class ReservationServiceImpl implements ReservationService {
                 page.getTotalPages(),
                 page.isLast()
         );
-    }
-
-    @Override
-    public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getCurrentReservations(Integer customerId, org.springframework.data.domain.Pageable pageable) {
-        org.springframework.data.domain.Page<ReservationResponseDto> page = reservationRepository.findCurrentReservationsByCustomerId(customerId, pageable);
-        return new com.roadready.dto.PaginatedResponse<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isLast()
-        );
-    }
-
-    @Override
-    public ReservationResponseDto getReservation(Integer reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
-        return reservationMapper.mapEntityToDto(reservation);
     }
 
     @Override

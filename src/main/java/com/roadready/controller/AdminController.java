@@ -2,8 +2,6 @@ package com.roadready.controller;
 
 import com.roadready.dto.SignupRequestDto;
 import com.roadready.model.Admin;
-import com.roadready.model.User;
-import com.roadready.repository.AdminRepository;
 import com.roadready.service.AdminService;
 import com.roadready.service.UserService;
 import lombok.AllArgsConstructor;

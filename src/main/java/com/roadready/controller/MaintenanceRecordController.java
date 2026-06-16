@@ -20,7 +20,7 @@ public class MaintenanceRecordController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'AGENT')")
     public ResponseEntity<PaginatedResponse<MaintenanceRecordDto>> getMaintenanceRecords(
             @RequestParam(required = false) Integer vehicleId,
             @RequestParam(required = false) Integer agentId,
@@ -31,8 +31,8 @@ public class MaintenanceRecordController {
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
-    public ResponseEntity<MaintenanceRecordDto> addMaintenanceRecord(@RequestBody com.roadready.dto.MaintenanceRequestDto dto) {
+    @PreAuthorize("hasAuthority('AGENT')")
+    public ResponseEntity<MaintenanceRecordDto> addMaintenanceRequest(@RequestBody com.roadready.dto.MaintenanceRequestDto dto) {
         MaintenanceRecordDto record = maintenanceRecordService.addMaintenanceRecord(dto);
         return ResponseEntity.ok(record);
     }

@@ -4,6 +4,7 @@ com\roadready\exception\CustomerNotFoundException.class
 com\roadready\utility\JwtUtility.class
 com\roadready\repository\VehicleRepository.class
 com\roadready\repository\CustomerRepository.class
+com\roadready\controller\PromotionController.class
 com\roadready\service\VehicleService.class
 com\roadready\dto\VehicleDto.class
 com\roadready\model\MaintenanceRecord.class
@@ -13,6 +14,7 @@ com\roadready\service\MaintenanceRecordService.class
 com\roadready\config\JwtFilter.class
 com\roadready\config\SecurityConfig.class
 com\roadready\dto\SignupRequestDto.class
+com\roadready\controller\FixController.class
 com\roadready\exception\BookingNotFoundException.class
 com\roadready\model\Brand.class
 com\roadready\service\ReservationServiceImpl.class
@@ -20,6 +22,8 @@ com\roadready\repository\ReservationRepository.class
 com\roadready\repository\AdminRepository.class
 com\roadready\dto\ReviewRequestDto.class
 com\roadready\controller\ReservationController.class
+com\roadready\controller\UserController.class
+com\roadready\controller\ReportController.class
 com\roadready\exception\ResourceNotFoundException.class
 com\roadready\controller\AuthController.class
 com\roadready\controller\VehicleController.class
@@ -30,6 +34,8 @@ com\roadready\dto\VehicleRequestDto.class
 com\roadready\exception\UserAlreadyExistsException.class
 com\roadready\controller\AdminController.class
 com\roadready\config\GlobalExceptionHandler.class
+com\roadready\dto\MaintenanceRequestDto.class
+com\roadready\dto\UserDto.class
 com\roadready\repository\UserRepository.class
 com\roadready\enums\Role.class
 com\roadready\utility\ResponseUtility.class
@@ -38,6 +44,7 @@ com\roadready\dto\MaintenanceRecordDto.class
 com\roadready\model\Payment.class
 com\roadready\exception\FileInvalidExtensionException.class
 com\roadready\model\Vehicle.class
+com\roadready\dto\ReportDto.class
 com\roadready\service\AdminService.class
 com\roadready\model\Promotion.class
 com\roadready\mapper\ReservationMapper.class
@@ -48,6 +55,7 @@ com\roadready\dto\PaginatedResponse.class
 com\roadready\dto\ReservationRequestDto.class
 com\roadready\exception\FileNotFoundException.class
 com\roadready\model\RentalAgent.class
+com\roadready\controller\TestAuth.class
 com\roadready\model\User.class
 com\roadready\enums\BookingStatus.class
 com\roadready\dto\TokenDto.class

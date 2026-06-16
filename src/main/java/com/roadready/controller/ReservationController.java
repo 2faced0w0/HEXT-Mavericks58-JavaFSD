@@ -13,7 +13,7 @@ import com.roadready.model.User;
 import com.roadready.model.Customer;
 import com.roadready.repository.CustomerRepository;
 
-@org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/reservations")
 @AllArgsConstructor
@@ -34,32 +34,12 @@ public class ReservationController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{customerId}/past")
-    public ResponseEntity<PaginatedResponse<ReservationResponseDto>> getPastReservations(@PathVariable Integer customerId, Pageable pageable) {
-        PaginatedResponse<ReservationResponseDto> responses = reservationService.getPastReservations(customerId, pageable);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/my/past")
+    @GetMapping("/my")
     public ResponseEntity<PaginatedResponse<ReservationResponseDto>> getMyPastReservations(@AuthenticationPrincipal User user, Pageable pageable) {
         Customer customer = customerRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Customer not found for the logged-in user"));
-        PaginatedResponse<ReservationResponseDto> responses = reservationService.getPastReservations(customer.getId(), pageable);
+        PaginatedResponse<ReservationResponseDto> responses = reservationService.getReservations(customer.getId(), pageable);
         return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/my/current")
-    public ResponseEntity<PaginatedResponse<ReservationResponseDto>> getMyCurrentReservations(@AuthenticationPrincipal User user, Pageable pageable) {
-        Customer customer = customerRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Customer not found for the logged-in user"));
-        PaginatedResponse<ReservationResponseDto> responses = reservationService.getCurrentReservations(customer.getId(), pageable);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/{reservationId}")
-    public ResponseEntity<ReservationResponseDto> getReservation(@PathVariable Integer reservationId) {
-        ReservationResponseDto response = reservationService.getReservation(reservationId);
-        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{reservationId}")

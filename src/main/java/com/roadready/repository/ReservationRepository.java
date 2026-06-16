@@ -27,24 +27,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
         LEFT JOIN r.customer c
         LEFT JOIN r.vehicle v
         WHERE c.id = :customerId
-        AND r.dropoffTime < CURRENT_TIMESTAMP""")
-    Page<ReservationResponseDto> findPastReservationsByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
-
-    @Query("""
-        SELECT new com.roadready.dto.ReservationResponseDto(
-            r.reservationId,
-            c.id,
-            v.vehicleId,
-            r.pickupTime,
-            r.dropoffTime,
-            r.optionalExtras,
-            r.bookingStatus,
-            r.createdAt
-        )
-        FROM Reservation r 
-        LEFT JOIN r.customer c
-        LEFT JOIN r.vehicle v
-        WHERE c.id = :customerId
-        AND r.dropoffTime >= CURRENT_TIMESTAMP""")
-    Page<ReservationResponseDto> findCurrentReservationsByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
+        """)
+    Page<ReservationResponseDto> findReservationsByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
 }

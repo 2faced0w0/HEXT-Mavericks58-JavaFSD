@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         User user=new User();
         user.setRole(Role.CUSTOMER);
         user.setUsername(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(encodedPassword);
 
         Customer customer = new Customer();
         customer.setUser(user);
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
         User user=new User();
         user.setRole(Role.ADMIN);
         user.setUsername(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(encodedPassword);
         save(user);
 
         Admin admin = new Admin();
@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
         User user=new User();
         user.setRole(Role.AGENT);
         user.setUsername(dto.email());
-        user.setPassword(dto.password());
+        user.setPassword(encodedPassword);
         save(user);
 
         RentalAgent agent = new RentalAgent();

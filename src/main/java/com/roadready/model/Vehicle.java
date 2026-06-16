@@ -52,4 +52,11 @@ public class Vehicle {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id", nullable = false)
     private RentalAgent agent;
+
+    public Vehicle(String needsMaintenance) {
+        this.needsMaintenance = "No";
+    }
+
+    @Column(name="Maintenance")
+    private String needsMaintenance;
 }

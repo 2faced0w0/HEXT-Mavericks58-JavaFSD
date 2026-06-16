@@ -1,27 +1,30 @@
 package com.roadready.controller;
 
+import com.roadready.dto.BrandDto;
 import com.roadready.dto.VehicleDto;
 import java.math.BigDecimal;
+import java.util.List;
+
 import com.roadready.dto.PaginatedResponse;
+import com.roadready.repository.BrandRepository;
+import com.roadready.repository.VehicleRepository;
 import com.roadready.service.VehicleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/vehicles")
+@RequiredArgsConstructor
 public class VehicleController {
 
     private final VehicleService vehicleService;
+    private final BrandRepository brandRepository;
+    private final VehicleRepository vehicleRepository;
 
-    private final com.roadready.repository.VehicleRepository vehicleRepository;
-
-    public VehicleController(VehicleService vehicleService, com.roadready.repository.VehicleRepository vehicleRepository) {
-        this.vehicleService = vehicleService;
-        this.vehicleRepository = vehicleRepository;
-    }
 
     @GetMapping("/search")
     public ResponseEntity<PaginatedResponse<VehicleDto>> searchVehicles(
@@ -69,4 +72,14 @@ public class VehicleController {
         vehicleRepository.save(vehicle);
         return ResponseEntity.ok("Vehicle status updated to " + isAvailable);
     }
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<BrandDto>> getAllBrands() {
+        List<BrandDto> brands = brandRepository.findAll()
+                .stream()
+                .map(brand -> new BrandDto(brand.getBrandId(), brand.getBrandName()))
+                .toList();
+        return ResponseEntity.ok(brands);
+    }
+    
 }
