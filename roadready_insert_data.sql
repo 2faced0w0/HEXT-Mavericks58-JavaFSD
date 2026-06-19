@@ -128,3 +128,14 @@ INSERT INTO reviews (reservation_id, rating, comments) VALUES
 (2, 5, 'The Model 3 was incredible to drive.'),
 (5, 4, 'The CR-V was perfect for our weekend trip.'),
 (6, 5, 'Driving a Mustang for 5 days was a dream come true!');
+
+-- ==========================================================
+-- 9. Insert Requests
+-- ==========================================================
+INSERT INTO requests (request_type, status, requested_by, vehicle_id, description, created_at, resolved_at) VALUES
+('PASSWORD_RESET', 'PENDING', 1, NULL, NULL, NOW(), NULL),
+('PASSWORD_RESET', 'PENDING', 2, NULL, NULL, NOW(), NULL),
+('MAINTENANCE', 'PENDING', 11, 1, 'Oil change needed', NOW(), NULL),
+('MAINTENANCE', 'PENDING', 12, 3, 'Brake pads worn out', NOW(), NULL),
+('MAINTENANCE', 'RESOLVED', 13, 4, 'Routine checkup completed', '2026-06-10 10:00:00', '2026-06-16 10:00:00');
+

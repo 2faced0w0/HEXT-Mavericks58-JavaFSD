@@ -20,6 +20,18 @@ public class PromotionController {
         return ResponseEntity.ok(promotionRepository.findAll());
     }
 
+    @GetMapping("/validate")
+    public ResponseEntity<?> validatePromotion(@RequestParam String code) {
+        return promotionRepository.findByPromoCode(code)
+                .<ResponseEntity<?>>map(promo -> {
+                    if (promo.getValidTill().isBefore(java.time.Instant.now())) {
+                        return ResponseEntity.badRequest().body("Promotion has expired.");
+                    }
+                    return ResponseEntity.ok(promo);
+                })
+                .orElse(ResponseEntity.badRequest().body("Invalid promotion code."));
+    }
+
     @PostMapping("/add")
     public ResponseEntity<Promotion> addPromotion(@RequestBody Promotion promotion) {
         if(promotion.getCreatedAt() == null) {

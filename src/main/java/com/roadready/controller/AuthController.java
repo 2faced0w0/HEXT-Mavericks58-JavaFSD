@@ -12,6 +12,12 @@ import com.roadready.utility.JwtUtility;
 import com.roadready.repository.CustomerRepository;
 import com.roadready.repository.AdminRepository;
 import com.roadready.repository.RentalAgentRepository;
+import com.roadready.repository.RequestRepository;
+import com.roadready.repository.UserRepository;
+import com.roadready.enums.RequestStatus;
+import com.roadready.enums.RequestType;
+import com.roadready.model.Request;
+import com.roadready.dto.ForgotPasswordDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
@@ -28,6 +34,8 @@ public class AuthController {
     private final CustomerRepository customerRepository;
     private final AdminRepository adminRepository;
     private final RentalAgentRepository rentalAgentRepository;
+    private final RequestRepository requestRepository;
+    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/signup")
@@ -44,22 +52,43 @@ public class AuthController {
         String role = user.getRole().toString();
 
         Integer id = null;
+        String name = null;
         if (role.equals("CUSTOMER")) {
-            id = customerRepository.findByUser(user).map(Customer::getId).orElseThrow(
+            Customer customer = customerRepository.findByUser(user).orElseThrow(
                     () -> new CustomerNotFoundException("Invalid Credentials!!!"));
+            id = customer.getId();
+            name = customer.getName();
         } else if (role.equals("ADMIN")) {
-            id = adminRepository.findByUser(user).map(com.roadready.model.Admin::getId).orElseThrow(
+            com.roadready.model.Admin admin = adminRepository.findByUser(user).orElseThrow(
                     () -> new CustomerNotFoundException("Invalid Credentials!!!"));
-        } else if (role.equals("RENTAL_AGENT")) {
-            id = rentalAgentRepository.findByUser(user).map(com.roadready.model.RentalAgent::getId).orElseThrow(
+            id = admin.getId();
+            name = admin.getName();
+        } else if (role.equals("AGENT")) {
+            com.roadready.model.RentalAgent agent = rentalAgentRepository.findByUser(user).orElseThrow(
                     () -> new CustomerNotFoundException("Invalid Credentials!!!"));
+            id = agent.getId();
+            name = agent.getName();
         }
 
         return new TokenDto(
-                customerRepository.findByUser(user).map(Customer::getName).orElse(null),
+                name,
                 principal.getName(),
                 role,
                 token,
                 id);
+    }
+
+    @PostMapping("/forgot-password")
+    public org.springframework.http.ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordDto dto) {
+        User user = userRepository.findByUsername(dto.email())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Request request = new Request();
+        request.setRequestType(RequestType.PASSWORD_RESET);
+        request.setStatus(RequestStatus.PENDING);
+        request.setRequestedBy(user);
+        requestRepository.save(request);
+
+        return org.springframework.http.ResponseEntity.ok("Password reset request submitted successfully.");
     }
 }

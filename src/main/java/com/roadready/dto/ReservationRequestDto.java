@@ -10,6 +10,7 @@ public record ReservationRequestDto(
         LocalDateTime pickupTime,
         @NotNull(message = "Do you really want to keep the car forever ? Go buy it then.")
         LocalDateTime dropoffTime,
-        String optionalExtras
+        String optionalExtras,
+        String promoCode
 ) {
 }

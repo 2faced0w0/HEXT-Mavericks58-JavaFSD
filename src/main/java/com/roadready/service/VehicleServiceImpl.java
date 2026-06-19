@@ -38,7 +38,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setImageUrl(dto.imageUrl());
         vehicle.setLocation(dto.location());
         vehicle.setAgent(agent);
-        vehicle.setIsAvailable(true);
+        vehicle.setAvailabilityStatus(com.roadready.enums.AvailabilityStatus.AVAILABLE);
         vehicle.setVehicleType(dto.vehicleType());
         vehicle.setSubType(dto.subType());
 
@@ -57,5 +57,29 @@ public class VehicleServiceImpl implements VehicleService {
                 vehiclePage.getTotalElements(),
                 vehiclePage.getTotalPages(),
                 vehiclePage.isLast());
+    }
+
+    @Override
+    public void deleteVehicle(Integer id) {
+        if (!vehicleRepository.existsById(id)) {
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+        vehicleRepository.deleteById(id);
+    }
+
+    @Override
+    public PaginatedResponse<com.roadready.dto.VehicleDto> getVehiclesByAgentId(Integer agentId, Pageable pageable) {
+        Page<com.roadready.model.Vehicle> page = vehicleRepository.findByAgent_Id(agentId, pageable);
+        java.util.List<com.roadready.dto.VehicleDto> dtos = page.getContent().stream()
+                .map(vehicleMapper::mapEntityToDto)
+                .collect(java.util.stream.Collectors.toList());
+        return new PaginatedResponse<>(
+                dtos,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 }

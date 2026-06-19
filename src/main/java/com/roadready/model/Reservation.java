@@ -44,6 +44,9 @@ public class Reservation {
     @Column(name = "booking_status")
     private BookingStatus bookingStatus = BookingStatus.PENDING;
 
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Payment payment;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.roadready.model.User;
 import com.roadready.model.Customer;
+import com.roadready.model.RentalAgent;
 import com.roadready.repository.CustomerRepository;
+import com.roadready.repository.RentalAgentRepository;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -21,6 +23,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final CustomerRepository customerRepository;
+    private final RentalAgentRepository rentalAgentRepository;
 
     @PostMapping("/add")
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto requestDto) {
@@ -39,6 +42,15 @@ public class ReservationController {
         Customer customer = customerRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("Customer not found for the logged-in user"));
         PaginatedResponse<ReservationResponseDto> responses = reservationService.getReservations(customer.getId(), pageable);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/agent")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAuthority('AGENT')")
+    public ResponseEntity<PaginatedResponse<ReservationResponseDto>> getAgentReservations(@AuthenticationPrincipal User user, Pageable pageable) {
+        RentalAgent agent = rentalAgentRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Agent not found for the logged-in user"));
+        PaginatedResponse<ReservationResponseDto> responses = reservationService.getReservationsByAgent(agent.getId(), pageable);
         return ResponseEntity.ok(responses);
     }
 

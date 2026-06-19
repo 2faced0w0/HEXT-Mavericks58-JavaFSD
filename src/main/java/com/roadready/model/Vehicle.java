@@ -34,10 +34,11 @@ public class Vehicle {
     @Column(name = "pricing_per_day", nullable = false, precision = 10, scale = 2)
     private BigDecimal pricingPerDay;
 
-    @Column(name = "is_available", nullable = false)
-    private Boolean isAvailable = true;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "availability_status", nullable = false)
+    private com.roadready.enums.AvailabilityStatus availabilityStatus = com.roadready.enums.AvailabilityStatus.AVAILABLE;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
     @Column(nullable = false)
@@ -52,11 +53,4 @@ public class Vehicle {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agent_id", nullable = false)
     private RentalAgent agent;
-
-    public Vehicle(String needsMaintenance) {
-        this.needsMaintenance = "No";
-    }
-
-    @Column(name="Maintenance")
-    private String needsMaintenance;
 }

@@ -29,4 +29,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
         WHERE c.id = :customerId
         """)
     Page<ReservationResponseDto> findReservationsByCustomerId(@Param("customerId") Integer customerId, Pageable pageable);
+
+    @Query("""
+        SELECT new com.roadready.dto.ReservationResponseDto(
+            r.reservationId,
+            c.id,
+            v.vehicleId,
+            r.pickupTime,
+            r.dropoffTime,
+            r.optionalExtras,
+            r.bookingStatus,
+            r.createdAt
+        )
+        FROM Reservation r 
+        LEFT JOIN r.customer c
+        LEFT JOIN r.vehicle v
+        WHERE v.agent.id = :agentId
+        """)
+    Page<ReservationResponseDto> findReservationsByAgentId(@Param("agentId") Integer agentId, Pageable pageable);
 }

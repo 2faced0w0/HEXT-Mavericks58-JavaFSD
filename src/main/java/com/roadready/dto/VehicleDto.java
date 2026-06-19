@@ -10,7 +10,7 @@ public record VehicleDto(
         String model,
         String specifications,
         BigDecimal pricingPerDay,
-        Boolean isAvailable,
+        com.roadready.enums.AvailabilityStatus availabilityStatus,
         String imageUrl,
         String location,
         String vehicleType,

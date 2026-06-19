@@ -18,4 +18,6 @@ public interface VehicleService {
             Pageable pageable);
 
     VehicleDto addVehicle(com.roadready.dto.VehicleRequestDto dto);
+    void deleteVehicle(Integer id);
+    PaginatedResponse<VehicleDto> getVehiclesByAgentId(Integer agentId, Pageable pageable);
 }

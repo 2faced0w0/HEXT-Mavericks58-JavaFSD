@@ -13,6 +13,11 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
 
+    Page<Vehicle> findByAvailabilityStatus(com.roadready.enums.AvailabilityStatus availabilityStatus, Pageable pageable);
+
+    @Query("SELECT v FROM Vehicle v WHERE v.agent.id = :agentId")
+    Page<Vehicle> findByAgent_Id(@Param("agentId") Integer agentId, Pageable pageable);
+
     @Query("""
             SELECT new com.roadready.dto.VehicleDto(
                 v.vehicleId, 
@@ -22,7 +27,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
                 v.model, 
                 v.specifications, 
                 v.pricingPerDay,
-                v.isAvailable, 
+                v.availabilityStatus, 
                 v.imageUrl, 
                 v.location,
                 v.vehicleType,
@@ -40,7 +45,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Integer> {
             AND (CAST(:startDate AS java.time.LocalDateTime) IS NULL OR CAST(:endDate AS java.time.LocalDateTime) IS NULL OR NOT EXISTS (
                 SELECT r FROM Reservation r 
                 WHERE r.vehicle = v 
-                AND r.bookingStatus IN ('CONFIRMED', 'CHECKED_IN')
+                AND r.bookingStatus IN ('CONFIRMED', 'CHECKED_OUT')
                 AND r.dropoffTime > :startDate 
                 AND r.pickupTime < :endDate
             ))""")

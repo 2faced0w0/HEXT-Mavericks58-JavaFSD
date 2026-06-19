@@ -39,6 +39,9 @@ public class Payment {
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
+    @Column(name = "promo_code")
+    private String promoCode;
+
     @CreationTimestamp
     @Column(name = "payment_date", updatable = false)
     private LocalDateTime paymentDate;

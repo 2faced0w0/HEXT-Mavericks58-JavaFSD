@@ -13,13 +13,16 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
     private final MaintenanceRecordRepository maintenanceRecordRepository;
     private final com.roadready.repository.VehicleRepository vehicleRepository;
     private final com.roadready.repository.RentalAgentRepository rentalAgentRepository;
+    private final com.roadready.repository.RequestRepository requestRepository;
 
     public MaintenanceRecordServiceImpl(MaintenanceRecordRepository maintenanceRecordRepository, 
             com.roadready.repository.VehicleRepository vehicleRepository, 
-            com.roadready.repository.RentalAgentRepository rentalAgentRepository) {
+            com.roadready.repository.RentalAgentRepository rentalAgentRepository,
+            com.roadready.repository.RequestRepository requestRepository) {
         this.maintenanceRecordRepository = maintenanceRecordRepository;
         this.vehicleRepository = vehicleRepository;
         this.rentalAgentRepository = rentalAgentRepository;
+        this.requestRepository = requestRepository;
     }
 
     @Override
@@ -40,22 +43,22 @@ public class MaintenanceRecordServiceImpl implements MaintenanceRecordService {
         com.roadready.model.Vehicle vehicle = vehicleRepository.findById(dto.vehicleId()).orElseThrow(() -> new RuntimeException("Vehicle not found"));
         com.roadready.model.RentalAgent agent = rentalAgentRepository.findById(dto.agentId()).orElseThrow(() -> new RuntimeException("Agent not found"));
 
-        com.roadready.model.MaintenanceRecord record = new com.roadready.model.MaintenanceRecord();
-        record.setVehicle(vehicle);
-        record.setUpdatedByAgent(agent);
-        record.setParticulars(dto.particulars());
-        record.setDaysSinceLastService(dto.daysSinceLastService());
+        com.roadready.model.Request request = new com.roadready.model.Request();
+        request.setRequestType(com.roadready.enums.RequestType.MAINTENANCE);
+        request.setStatus(com.roadready.enums.RequestStatus.PENDING);
+        request.setRequestedBy(agent.getUser());
+        request.setVehicle(vehicle);
+        request.setDescription(dto.particulars());
+        request.setDaysSinceLastService(dto.daysSinceLastService());
 
-        // Update vehicle availability
-        vehicle.setIsAvailable(false);
-        vehicleRepository.save(vehicle);
+        requestRepository.save(request);
 
-        record = maintenanceRecordRepository.save(record);
-
+        // Return a dummy DTO since we changed this to a Request instead of a direct record.
+        // The frontend doesn't use the returned data anyway.
         return new MaintenanceRecordDto(
-                record.getId(),
-                record.getParticulars(),
-                record.getDaysSinceLastService(),
+                request.getId(),
+                request.getDescription(),
+                request.getDaysSinceLastService(),
                 agent.getId(),
                 agent.getName(),
                 vehicle.getVehicleId(),

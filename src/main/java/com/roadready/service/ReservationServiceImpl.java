@@ -25,6 +25,8 @@ public class ReservationServiceImpl implements ReservationService {
     private final CustomerRepository customerRepository;
     private final VehicleRepository vehicleRepository;
     private final ReservationMapper reservationMapper;
+    private final com.roadready.repository.PaymentRepository paymentRepository;
+    private final com.roadready.repository.PromotionRepository promotionRepository;
 
     @Override
     public ReservationResponseDto createReservation(ReservationRequestDto requestDto) {
@@ -36,13 +38,33 @@ public class ReservationServiceImpl implements ReservationService {
                 .findById(requestDto.vehicleId())
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
-        if (!Boolean.TRUE.equals(vehicle.getIsAvailable())) {
+        if (vehicle.getAvailabilityStatus() != com.roadready.enums.AvailabilityStatus.AVAILABLE) {
             throw new IllegalStateException("Vehicle is not available");
         }
 
         Reservation reservation = reservationMapper.mapDtoToEntity(requestDto, customer, vehicle);
         reservation.setBookingStatus(BookingStatus.CONFIRMED);
         Reservation savedReservation = reservationRepository.save(reservation);
+
+        long days = java.time.temporal.ChronoUnit.DAYS.between(requestDto.pickupTime(), requestDto.dropoffTime());
+        if (days <= 0) days = 1;
+        java.math.BigDecimal totalAmount = vehicle.getPricingPerDay().multiply(java.math.BigDecimal.valueOf(days));
+
+        if (requestDto.promoCode() != null && !requestDto.promoCode().isBlank()) {
+            com.roadready.model.Promotion promo = promotionRepository.findByPromoCode(requestDto.promoCode()).orElse(null);
+            if (promo != null && promo.getValidTill().isAfter(java.time.Instant.now())) {
+                java.math.BigDecimal discount = totalAmount.multiply(java.math.BigDecimal.valueOf(promo.getDiscountPercentage())).divide(java.math.BigDecimal.valueOf(100));
+                totalAmount = totalAmount.subtract(discount);
+            }
+        }
+
+        com.roadready.model.Payment payment = new com.roadready.model.Payment();
+        payment.setReservation(savedReservation);
+        payment.setAmount(totalAmount);
+        payment.setPaymentMethod("CREDIT_CARD");
+        payment.setPaymentStatus(com.roadready.enums.PaymentStatus.PENDING);
+        payment.setPromoCode(requestDto.promoCode());
+        paymentRepository.save(payment);
         
         return reservationMapper.mapEntityToDto(savedReservation);
     }
@@ -61,6 +83,19 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getReservations(Integer customerId, org.springframework.data.domain.Pageable pageable) {
         Page<ReservationResponseDto> page = reservationRepository.findReservationsByCustomerId(customerId, pageable);
+        return new com.roadready.dto.PaginatedResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
+    }
+
+    @Override
+    public com.roadready.dto.PaginatedResponse<ReservationResponseDto> getReservationsByAgent(Integer agentId, org.springframework.data.domain.Pageable pageable) {
+        Page<ReservationResponseDto> page = reservationRepository.findReservationsByAgentId(agentId, pageable);
         return new com.roadready.dto.PaginatedResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -95,6 +130,13 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
         reservation.setBookingStatus(BookingStatus.CHECKED_OUT);
+        
+        Vehicle vehicle = reservation.getVehicle();
+        if (vehicle != null) {
+            vehicle.setAvailabilityStatus(com.roadready.enums.AvailabilityStatus.RENTED);
+            vehicleRepository.save(vehicle);
+        }
+
         // Note: we can log the initialCondition or save it to a separate entity
         return reservationMapper.mapEntityToDto(reservationRepository.save(reservation));
     }
@@ -104,6 +146,13 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found"));
         reservation.setBookingStatus(BookingStatus.COMPLETED); // Or CHECKED_IN, user said CHECKED_IN/CHECKED_OUT
+        
+        Vehicle vehicle = reservation.getVehicle();
+        if (vehicle != null) {
+            vehicle.setAvailabilityStatus(com.roadready.enums.AvailabilityStatus.AVAILABLE);
+            vehicleRepository.save(vehicle);
+        }
+
         // Note: we can log finalCondition
         return reservationMapper.mapEntityToDto(reservationRepository.save(reservation));
     }

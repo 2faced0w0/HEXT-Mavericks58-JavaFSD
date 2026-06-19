@@ -21,7 +21,7 @@ public class VehicleMapper {
                 vehicle.getModel(),
                 vehicle.getSpecifications(),
                 vehicle.getPricingPerDay(),
-                vehicle.getIsAvailable(),
+                vehicle.getAvailabilityStatus(),
                 vehicle.getImageUrl(),
                 vehicle.getLocation(),
                 vehicle.getVehicleType(),
@@ -40,7 +40,7 @@ public class VehicleMapper {
         vehicle.setModel(dto.model());
         vehicle.setSpecifications(dto.specifications());
         vehicle.setPricingPerDay(dto.pricingPerDay());
-        vehicle.setIsAvailable(dto.isAvailable());
+        vehicle.setAvailabilityStatus(dto.availabilityStatus());
         vehicle.setImageUrl(dto.imageUrl());
         vehicle.setLocation(dto.location());
         vehicle.setVehicleType(dto.vehicleType());

@@ -36,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // Allow login-signup auth endpoints for all
                         .requestMatchers(HttpMethod.GET, "/api/vehicles/search").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/vehicles/brands").permitAll()// Allow
-                        .requestMatchers("/api/reservations/**").hasAuthority("CUSTOMER")
+                        .requestMatchers("/api/reservations/**").hasAnyAuthority("CUSTOMER", "AGENT", "ADMIN")
                                                                                                                       // vehicle
                                                                                                                       // auth
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Restricted to ADMIN
