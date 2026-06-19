@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { vehicleService, reservationService } from '../services/api';
+import { vehicleService, reservationService, promotionService } from '../../services/api';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
@@ -18,6 +18,19 @@ const ReservationCheckout = () => {
   const [endDate] = useState(location.state?.endDate || null);
   const [optionalExtras, setOptionalExtras] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const [promoCode, setPromoCode] = useState('');
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [promoMessage, setPromoMessage] = useState('');
+  const [promoValid, setPromoValid] = useState(false);
+
+  // Price calculations
+  const pickup = new Date(startDate);
+  const dropoff = new Date(endDate);
+  const days = Math.max(1, Math.ceil((dropoff - pickup) / (1000 * 60 * 60 * 24)));
+  const basePrice = vehicle ? vehicle.pricingPerDay * days : 0;
+  const discountAmount = (basePrice * discountPercent) / 100;
+  const finalPrice = basePrice - discountAmount;
 
   useEffect(() => {
     if (!startDate || !endDate) {
@@ -48,6 +61,20 @@ const ReservationCheckout = () => {
     }
   };
 
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim()) return;
+    try {
+      const res = await promotionService.validatePromoCode(promoCode);
+      setDiscountPercent(res.data.discountPercentage);
+      setPromoValid(true);
+      setPromoMessage(`Promo code applied! ${res.data.discountPercentage}% off.`);
+    } catch (err) {
+      setDiscountPercent(0);
+      setPromoValid(false);
+      setPromoMessage(err.response?.data || 'Invalid promo code');
+    }
+  };
+
   const handleCheckout = async () => {
     const customerId = localStorage.getItem('id');
     if (!customerId) {
@@ -63,7 +90,8 @@ const ReservationCheckout = () => {
         vehicleId: parseInt(id),
         pickupTime: startDate,
         dropoffTime: endDate,
-        optionalExtras: optionalExtras
+        optionalExtras: optionalExtras,
+        promoCode: promoValid ? promoCode : null
       });
       alert('Reservation successful!');
       navigate('/vehicles');
@@ -93,7 +121,7 @@ const ReservationCheckout = () => {
               <div className="mb-4">
                 <h4>{vehicle.brandName} {vehicle.model}</h4>
                 <p className="text-muted">{vehicle.vehicleType} {vehicle.subType ? `- ${vehicle.subType}` : ''}</p>
-                <h5>Price: ${vehicle.pricingPerDay}/day</h5>
+                <h5>Price: Rs. {vehicle.pricingPerDay}/day</h5>
               </div>
               <div className="mb-3">
                 <strong>Pickup:</strong> {new Date(startDate).toLocaleString()}<br/>
@@ -109,6 +137,50 @@ const ReservationCheckout = () => {
                   placeholder="E.g., Baby seat, GPS, etc."
                 />
               </div>
+
+              <div className="mb-4">
+                <label className="form-label font-bold">Promo Code</label>
+                <div className="d-flex gap-2">
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    value={promoCode} 
+                    onChange={(e) => setPromoCode(e.target.value)} 
+                    placeholder="Enter code" 
+                    disabled={promoValid}
+                  />
+                  <Button 
+                    label={promoValid ? "Applied" : "Apply"} 
+                    onClick={handleApplyPromo} 
+                    disabled={promoValid || !promoCode.trim()} 
+                    className={`p-button-${promoValid ? 'success' : 'primary'}`} 
+                  />
+                </div>
+                {promoMessage && (
+                  <small className={`mt-2 d-block ${promoValid ? 'text-success' : 'text-danger'}`}>
+                    {promoMessage}
+                  </small>
+                )}
+              </div>
+
+              <div className="mb-4 p-3 bg-light rounded border">
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Base Price ({days} day{days > 1 ? 's' : ''}):</span>
+                  <span>Rs. {basePrice.toFixed(2)}</span>
+                </div>
+                {discountAmount > 0 && (
+                  <div className="d-flex justify-content-between mb-2 text-success">
+                    <span>Discount ({discountPercent}%):</span>
+                    <span>- Rs. {discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
+                <hr />
+                <div className="d-flex justify-content-between fw-bold fs-5">
+                  <span>Total Final Price:</span>
+                  <span className="text-primary">Rs. {finalPrice.toFixed(2)}</span>
+                </div>
+              </div>
+
               <div className="d-flex justify-content-between">
                 <Button label="Cancel" onClick={() => navigate('/vehicles')} className="p-button-text p-button-secondary" />
                 <Button label="Confirm Reservation" icon="pi pi-check" onClick={handleCheckout} loading={submitting} className="p-button-success" />

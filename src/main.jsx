@@ -8,13 +8,17 @@ import 'primeicons/primeicons.css';
 import { BrowserRouter } from 'react-router-dom';
 import { PrimeReactProvider } from 'primereact/api';
 import App from './App.jsx'
+import { Provider } from 'react-redux';
+import { store } from './store/store.js';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <PrimeReactProvider>
       <BrowserRouter>
-        <App />
+        <StrictMode>
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </StrictMode>
       </BrowserRouter>
     </PrimeReactProvider>
-  </StrictMode>,
 )
