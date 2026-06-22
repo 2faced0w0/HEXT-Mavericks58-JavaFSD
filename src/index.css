@@ -1,111 +1,237 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bs-primary: #FFD700;
+  --bs-primary-rgb: 255, 215, 0;
+  
+  --bs-body-bg: #121212;
+  --bs-body-bg-rgb: 18, 18, 18;
+  
+  --bs-body-color: #f8f9fa;
+  --bs-body-color-rgb: 248, 249, 250;
+  
+  --bs-secondary: #2C2C2C;
+  --bs-secondary-rgb: 44, 44, 44;
+  
+  --bs-border-color: #333333;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.15);
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --bs-link-color: #FFD700;
+  --bs-link-hover-color: #e6c200;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --bs-card-bg: #1E1E1E;
+  --bs-card-border-color: #333333;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
+  background-color: var(--bs-body-bg);
+  background-image: url('./assets/bike_car_rental_background.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--bs-body-color);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+.text-primary {
+  color: var(--bs-primary) !important;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+  color: #000 !important;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+.btn-primary {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #000;
+  font-weight: 600;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.btn-primary:hover {
+  background-color: #e6c200;
+  border-color: #e6c200;
+  color: #000;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.btn-outline-primary {
+  color: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
+
+.btn-outline-primary:hover {
+  background-color: var(--bs-primary);
+  color: #000;
+}
+
+.card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+  background-color: #0a0a0a !important;
+  border-bottom: 1px solid #333;
+}
+
+.text-muted {
+  color: #adb5bd !important;
+}
+
+.form-control,
+.p-inputtext,
+.p-dropdown,
+.p-inputnumber-input,
+.p-password-input,
+.p-calendar .p-inputtext,
+.p-dropdown .p-dropdown-label,
+.p-inputtextarea {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  border-color: #ced4da !important;
+}
+
+.form-control:focus,
+.p-inputtext:focus,
+.p-inputtext:enabled:focus,
+.p-dropdown:not(.p-disabled).p-focus,
+.p-inputtextarea:enabled:focus {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  border-color: var(--bs-primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25) !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  background-color: #ffffff !important;
+  color: #6c757d !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: var(--bs-primary) !important;
+  color: #000 !important;
+}
+
+/* Custom shadow for prime-industrial look */
+.industrial-shadow {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 215, 0, 0.1);
+}
+
+/* Fix list group colors */
+.list-group-item {
+  background-color: var(--bs-card-bg);
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+.list-group-item.active {
+  background-color: var(--bs-primary);
+  color: #000;
+  border-color: var(--bs-primary);
+}
+.list-group-item:hover:not(.active) {
+  background-color: #2c2c2c;
+  color: var(--bs-body-color);
+}
+
+/* Fix PrimeReact DataTable colors */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-paginator-bottom {
+  background-color: var(--bs-card-bg) !important;
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-border-color) !important;
+}
+.p-datatable .p-datatable-tbody > tr {
+  background-color: var(--bs-card-bg) !important;
+}
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #2c2c2c !important;
+}
+
+/* Fix PrimeReact Paginator colors */
+.p-paginator {
+  background-color: var(--bs-card-bg) !important;
+  border-color: var(--bs-border-color) !important;
+}
+.p-paginator .p-paginator-pages .p-paginator-page,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  color: var(--bs-body-color) !important;
+}
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background-color: var(--bs-primary) !important;
+  color: #000 !important;
+}
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover,
+.p-paginator .p-paginator-first:hover,
+.p-paginator .p-paginator-prev:hover,
+.p-paginator .p-paginator-next:hover,
+.p-paginator .p-paginator-last:hover {
+  background-color: #333 !important;
+}
+
+/* Fix PrimeReact Dialog colors */
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  background-color: var(--bs-card-bg) !important;
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-border-color) !important;
+}
+.p-dialog .p-dialog-header {
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.p-dialog .p-dialog-header-icon {
+  color: var(--bs-body-color) !important;
+}
+
+/* Fix PrimeReact TabView colors */
+.p-tabview .p-tabview-nav {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--bs-border-color) !important;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  background-color: var(--bs-card-bg) !important;
+  color: #adb5bd !important;
+  border-color: transparent !important;
+  border-bottom: 2px solid transparent !important;
+}
+.p-tabview .p-tabview-nav li:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link {
+  background-color: #2c2c2c !important;
+  color: var(--bs-body-color) !important;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background-color: var(--bs-card-bg) !important;
+  color: var(--bs-primary) !important;
+  border-bottom-color: var(--bs-primary) !important;
+}
+.p-tabview .p-tabview-panels {
+  background-color: var(--bs-card-bg) !important;
+  color: var(--bs-body-color) !important;
+  border: 1px solid var(--bs-border-color);
+  border-top: none;
+}
+
+

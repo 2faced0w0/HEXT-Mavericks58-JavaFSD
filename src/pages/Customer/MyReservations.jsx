@@ -4,6 +4,8 @@ import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputTextarea } from 'primereact/inputtextarea';
+import ResponsiveStarRating from '../../components/ResponsiveStarRating';
+import api from '../../services/api';
 
 const MyReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -17,6 +19,9 @@ const MyReservations = () => {
     dropoffTime: '',
     optionalExtras: ''
   });
+
+  const [showReviewDialog, setShowReviewDialog] = useState(false);
+  const [reviewData, setReviewData] = useState({ rating: 5, comments: '' });
 
   useEffect(() => {
     fetchReservations();
@@ -74,6 +79,20 @@ const MyReservations = () => {
     }
   };
 
+  const handleReviewSubmit = async () => {
+    try {
+      await api.post('/reviews', {
+        reservationId: selectedReservation.reservationId,
+        rating: reviewData.rating,
+        comments: reviewData.comments
+      });
+      alert('Review submitted successfully.');
+      setShowReviewDialog(false);
+    } catch (err) {
+      alert('Failed to submit review.');
+    }
+  };
+
   const isActive = (status) => ['PENDING', 'CONFIRMED', 'ACTIVE'].includes(status);
 
   if (loading) return <div className="text-center mt-5"><div className="spinner-border text-primary" role="status"></div></div>;
@@ -101,6 +120,11 @@ const MyReservations = () => {
                   <div className="d-flex justify-content-end gap-2 border-top pt-3">
                     <Button label="Modify" icon="pi pi-pencil" className="p-button-sm p-button-outlined p-button-info" onClick={() => openModifyDialog(res)} />
                     <Button label="Cancel" icon="pi pi-times" className="p-button-sm p-button-outlined p-button-danger" onClick={() => handleCancel(res.reservationId)} />
+                  </div>
+                )}
+                {res.bookingStatus === 'COMPLETED' && (
+                  <div className="d-flex justify-content-end gap-2 border-top pt-3">
+                    <Button label="Leave a Review" icon="pi pi-star" className="p-button-sm p-button-success p-button-outlined" onClick={() => { setSelectedReservation(res); setReviewData({rating: 5, comments: ''}); setShowReviewDialog(true); }} />
                   </div>
                 )}
               </Card>
@@ -141,6 +165,31 @@ const MyReservations = () => {
         <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
           <Button label="Cancel" onClick={() => setShowModifyDialog(false)} className="p-button-text p-button-secondary" />
           <Button label="Save Changes" onClick={handleModifySubmit} className="p-button-primary" />
+        </div>
+      </Dialog>
+
+      <Dialog header="Leave a Review" visible={showReviewDialog} style={{ width: '40vw', minWidth: '300px' }} onHide={() => setShowReviewDialog(false)}>
+        <div className="mb-3 d-flex justify-content-center">
+          <ResponsiveStarRating 
+            rating={reviewData.rating} 
+            maxStars={5} 
+            readOnly={false} 
+            onChange={(val) => setReviewData({...reviewData, rating: val})} 
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label font-bold">Comments</label>
+          <InputTextarea 
+            value={reviewData.comments} 
+            onChange={(e) => setReviewData({...reviewData, comments: e.target.value})} 
+            rows={4} 
+            className="w-100" 
+            placeholder="Tell us about your experience..."
+          />
+        </div>
+        <div className="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+          <Button label="Cancel" onClick={() => setShowReviewDialog(false)} className="p-button-text p-button-secondary" />
+          <Button label="Submit Review" onClick={handleReviewSubmit} className="p-button-success" />
         </div>
       </Dialog>
     </div>

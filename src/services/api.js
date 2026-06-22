@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/v1',
 });
 
 // Add a request interceptor to add the token to requests
@@ -13,7 +13,7 @@ api.interceptors.request.use(
     }
 
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && token !== 'null' && token !== 'undefined') {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -37,7 +37,9 @@ export const customerService = {
 };
 
 export const promotionService = {
-  validatePromoCode: (code) => api.get('/promotions/validate', { params: { code } })
+  validatePromoCode: (code) => api.get('/promotions/validate', { params: { code } }),
+  deletePromotion: (id) => api.delete(`/promotions/${id}`),
+  setActiveBanner: (id) => api.put(`/promotions/${id}/set-banner`)
 };
 
 export const vehicleService = {
@@ -64,7 +66,8 @@ export const adminService = {
   getReports: () => api.get('/reports'),
   getRequests: () => api.get('/admin/requests'),
   resolvePasswordRequest: (id, newPassword) => api.post(`/admin/requests/${id}/resolve-password`, { newPassword }),
-  resolveMaintenanceRequest: (id) => api.post(`/admin/requests/${id}/resolve-maintenance`)
+  resolveMaintenanceRequest: (id) => api.post(`/admin/requests/${id}/resolve-maintenance`),
+  setActiveBanner: (id) => api.put(`/promotions/${id}/set-banner`)
 };
 
 export const reservationService = {

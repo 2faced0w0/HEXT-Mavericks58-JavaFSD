@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import usersReducer from './slices/usersSlice';
-import vehiclesReducer from './slices/vehiclesSlice';
+import vehicleReducer from './vehicleSlice';
+import userReducer from './userSlice';
 
 export const store = configureStore({
   reducer: {
-    users: usersReducer,
-    vehicles: vehiclesReducer,
+    vehicles: vehicleReducer,
+    users: userReducer,
   },
 });

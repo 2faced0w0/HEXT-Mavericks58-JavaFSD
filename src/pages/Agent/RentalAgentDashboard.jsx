@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { vehicleService, reservationService, maintenanceService, brandService } from '../../services/api';
-import { TabView, TabPanel } from 'primereact/tabview';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -15,6 +14,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
 
 const RentalAgentDashboard = () => {
+  const [activeTab, setActiveTab] = useState('checkinout');
   const [vehicles, setVehicles] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [maintenanceRecords, setMaintenanceRecords] = useState([]);
@@ -341,37 +341,74 @@ const RentalAgentDashboard = () => {
   };
 
   return (
-    <div className="container mt-5 mb-5">
+    <div className="container-fluid mt-5 mb-5 px-4 flex-grow-1">
       <Toast ref={toast} />
-      <h2 className="mb-4">Rental Agent Dashboard</h2>
+      <h2 className="mb-4 text-light">Rental Agent Dashboard</h2>
 
-      <TabView className="shadow-sm">
-        <TabPanel header="Check-In / Check-Out" leftIcon="pi pi-calendar mr-2">
-          <DataTable value={reservations} paginator rows={10} className="p-datatable-sm" emptyMessage="No reservations found or endpoint not available.">
-            <Column field="reservationId" header="Res ID" sortable></Column>
-            <Column field="vehicleId" header="Vehicle ID" sortable></Column>
-            <Column field="pickupTime" header="Pickup"></Column>
-            <Column field="dropoffTime" header="Dropoff"></Column>
-            <Column field="bookingStatus" header="Status"></Column>
-            <Column header="Actions" body={resActionTemplate}></Column>
-          </DataTable>
-        </TabPanel>
-
-        <TabPanel header="Inventory Management" leftIcon="pi pi-car mr-2">
-          <div className="mb-3 text-end d-flex justify-content-end gap-2">
-            <Button label="Add Vehicle" icon="pi pi-plus" className="btn btn-outline-info" onClick={openAddVehicle} />
-            <Button label="Raise Request" icon="pi pi-wrench" className="btn btn-outline-dark" onClick={() => openMaintenanceRequest()} />
+      <div className="row">
+        {/* Vertical Sidebar */}
+        <div className="col-md-3 col-lg-2 mb-4">
+          <div className="list-group shadow-sm bg-dark">
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'checkinout' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('checkinout')}>
+              <i className="pi pi-calendar me-2"></i> Check-In / Out
+            </button>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'inventory' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('inventory')}>
+              <i className="pi pi-car me-2"></i> Inventory Management
+            </button>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'maintenance' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('maintenance')}>
+              <i className="pi pi-wrench me-2"></i> Maintenance
+            </button>
           </div>
-          <DataTable value={vehicles} paginator rows={10} className="p-datatable-sm shadow-sm" rowClassName={rowClassName}>
-            <Column field="vehicleId" header="Vehicle ID" sortable></Column>
-            <Column field="model" header="Model" sortable></Column>
-            <Column field="vehicleType" header="Type" sortable></Column>
-            <Column field="pricingPerDay" header="Price/Day" sortable></Column>
-            <Column header="Status" body={availabilityTemplate}></Column>
-            <Column header="Actions" body={actionTemplate}></Column>
-          </DataTable>
-        </TabPanel>
-      </TabView>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="col-md-9 col-lg-10">
+          {activeTab === 'checkinout' && (
+            <div className="card shadow-sm border-0 p-3">
+              <h4 className="mb-3">Check-In / Check-Out</h4>
+              <DataTable value={reservations} paginator rows={10} className="p-datatable-sm shadow-sm bg-dark text-white" emptyMessage="No reservations found or endpoint not available.">
+                <Column field="reservationId" header="Res ID" sortable></Column>
+                <Column field="vehicleId" header="Vehicle ID" sortable></Column>
+                <Column field="pickupTime" header="Pickup"></Column>
+                <Column field="dropoffTime" header="Dropoff"></Column>
+                <Column field="bookingStatus" header="Status"></Column>
+                <Column header="Actions" body={resActionTemplate}></Column>
+              </DataTable>
+            </div>
+          )}
+
+          {activeTab === 'inventory' && (
+            <div className="card shadow-sm border-0 p-3">
+              <h4 className="mb-3">Inventory Management</h4>
+              <div className="mb-3 text-end d-flex justify-content-end gap-2">
+                <Button label="Add Vehicle" icon="pi pi-plus" className="btn btn-info" onClick={openAddVehicle} />
+                <Button label="Raise Request" icon="pi pi-wrench" className="btn btn-warning" onClick={() => openMaintenanceRequest()} />
+              </div>
+              <DataTable value={vehicles} paginator rows={10} className="p-datatable-sm shadow-sm bg-dark text-white" rowClassName={rowClassName}>
+                <Column field="vehicleId" header="Vehicle ID" sortable></Column>
+                <Column field="model" header="Model" sortable></Column>
+                <Column field="vehicleType" header="Type" sortable></Column>
+                <Column field="pricingPerDay" header="Price/Day" sortable></Column>
+                <Column header="Status" body={availabilityTemplate}></Column>
+                <Column header="Actions" body={actionTemplate}></Column>
+              </DataTable>
+            </div>
+          )}
+
+          {activeTab === 'maintenance' && (
+            <div className="card shadow-sm border-0 p-3">
+              <h4 className="mb-3">Maintenance</h4>
+
+              <DataTable value={maintenanceRecords} paginator rows={10} className="p-datatable-sm shadow-sm bg-dark text-white" emptyMessage="No maintenance records found.">
+                <Column field="recordId" header="Record ID" sortable></Column>
+                <Column field="vehicleId" header="Vehicle ID" sortable></Column>
+                <Column field="particulars" header="Particulars"></Column>
+                <Column field="daysSinceLastService" header="Days Since Last Service" sortable></Column>
+              </DataTable>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Check In/Out Dialog */}
       <Dialog header={`Vehicle ${dialogMode === 'checkin' ? 'Check-In' : 'Check-Out'}`} visible={displayDialog} style={{ width: '50vw' }} onHide={() => setDisplayDialog(false)}>

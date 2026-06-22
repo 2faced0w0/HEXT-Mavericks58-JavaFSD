@@ -10,11 +10,13 @@ import ReservationCheckout from './pages/Customer/ReservationCheckout';
 import MyReservations from './pages/Customer/MyReservations';
 import Profile from './pages/Customer/Profile';
 import Footer from './components/Footer';
+import PromoBanner from './components/PromoBanner';
 import './App.css';
 
 function App() {
   return (
     <div className="d-flex flex-column min-vh-100">
+      <PromoBanner />
       <Navbar />
       <main className="flex-grow-1">
         <Routes>

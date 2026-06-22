@@ -17,10 +17,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-black shadow-sm mb-4 border-bottom border-warning border-2">
       <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          <i className="pi pi-car me-2"></i> RoadReady
+        <Link className="navbar-brand fw-bold text-warning" to="/">
+          <i className="pi pi-car me-2"></i> <span className="text-dark bg-warning">Road</span><span className="text-warning bg-dark">Ready</span>
         </Link>
         <button
           className="navbar-toggler"
@@ -61,7 +61,7 @@ const Navbar = () => {
                   <Link className="nav-link" to="/login">Login</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="btn btn-light text-primary ms-2 fw-semibold" to="/signup">Sign Up</Link>
+                  <Link className="btn btn-warning text-dark ms-2 fw-bold" to="/signup">Sign Up</Link>
                 </li>
               </>
             ) : (
@@ -74,7 +74,7 @@ const Navbar = () => {
                   )}
                 </li>
                 <li className="nav-item">
-                  <button className="btn btn-outline-light ms-2" onClick={handleLogout}><i className="pi pi-power-off me-2"></i>Logout</button>
+                  <button className="btn btn-outline-warning ms-2 fw-bold" onClick={handleLogout}><i className="pi pi-power-off me-2"></i>Logout</button>
                 </li>
               </>
             )}

@@ -20,8 +20,8 @@ const AdminDashboard = () => {
   const [activeRequestSubTab, setActiveRequestSubTab] = useState('maintenance');
 
   const dispatch = useDispatch();
-  const users = useSelector(state => state.users.list);
-  
+  const users = useSelector(state => state.users.data);
+
   const [promotions, setPromotions] = useState([]);
   const [reports, setReports] = useState(null);
   const [vehicles, setVehicles] = useState([]);
@@ -126,6 +126,17 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleSetActiveBanner = async (promoId) => {
+    try {
+      await adminService.setActiveBanner(promoId);
+      fetchPromotions();
+      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Active banner updated.' });
+    } catch (e) {
+      console.error(e);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to update active banner.' });
+    }
+  };
+
   const deleteVehicle = async (id) => {
     try {
       await vehicleService.deleteVehicle(id);
@@ -198,21 +209,33 @@ const AdminDashboard = () => {
 
   const actionTemplate = (rowData) => {
     return (
-      <Button 
-        label={rowData.active ? "Deactivate" : "Activate"} 
-        icon={rowData.active ? "pi pi-times" : "pi pi-check"} 
-        className={`p-button-sm ${rowData.active ? 'btn btn-outline-dark' : 'btn btn-outline-info'}`} 
-        onClick={() => toggleUserStatus(rowData)} 
+      <Button
+        label={rowData.active ? "Deactivate" : "Activate"}
+        icon={rowData.active ? "pi pi-times" : "pi pi-check"}
+        className={`p-button-sm ${rowData.active ? 'btn btn-warning' : 'btn btn-info'}`}
+        onClick={() => toggleUserStatus(rowData)}
       />
     );
   };
 
   const vehicleActionTemplate = (rowData) => {
     return (
-      <Button 
-        icon="pi pi-trash" 
-        className="p-button-rounded p-button-danger p-button-text" 
-        onClick={() => deleteVehicle(rowData.vehicleId)} 
+      <Button
+        icon="pi pi-trash"
+        className="p-button-rounded p-button-danger p-button-text"
+        onClick={() => deleteVehicle(rowData.vehicleId)}
+      />
+    );
+  };
+
+  const promoActionTemplate = (rowData) => {
+    return (
+      <Button
+        label={rowData.isBannerActive ? "Active Banner" : "Set Active"}
+        icon={rowData.isBannerActive ? "pi pi-check" : "pi pi-star"}
+        className={`p-button-sm ${rowData.isBannerActive ? 'p-button-success' : 'p-button-primary'}`}
+        onClick={() => handleSetActiveBanner(rowData.promotionId)}
+        disabled={rowData.isBannerActive}
       />
     );
   };
@@ -227,28 +250,28 @@ const AdminDashboard = () => {
     <div className="container-fluid mt-5 mb-5 px-4 flex-grow-1">
       <Toast ref={toast} />
       <h2 className="mb-4 text-primary">Admin Dashboard</h2>
-      
+
       <div className="row">
         {/* Vertical Sidebar */}
         <div className="col-md-3 col-lg-2 mb-4">
-          <div className="list-group shadow-sm">
-            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'users' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('users')}>
+          <div className="list-group shadow-sm bg-dark">
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'users' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('users')}>
               <i className="pi pi-users me-2"></i> Users
             </button>
-            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'promotions' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('promotions')}>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'promotions' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('promotions')}>
               <i className="pi pi-tags me-2"></i> Promotions
             </button>
-            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'reports' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('reports')}>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'reports' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('reports')}>
               <i className="pi pi-chart-bar me-2"></i> Reports
             </button>
-            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'fleet' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('fleet')}>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'fleet' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('fleet')}>
               <i className="pi pi-car me-2"></i> Fleet Management
             </button>
-            <button className={`list-group-item list-group-item-action border-0 py-3 d-flex justify-content-between align-items-center ${activeTab === 'requests' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('requests')}>
+            <button className={`list-group-item list-group-item-action border-0 py-3 d-flex justify-content-between align-items-center ${activeTab === 'requests' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('requests')}>
               <span><i className="pi pi-bell me-2"></i> Requests</span>
               {pendingCount > 0 && <Badge value={pendingCount} severity="danger" className="ms-2"></Badge>}
             </button>
-            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'add-agent' ? 'active bg-primary text-white' : ''}`} onClick={() => setActiveTab('add-agent')}>
+            <button className={`list-group-item list-group-item-action border-0 py-3 ${activeTab === 'add-agent' ? 'active bg-warning text-dark' : 'bg-dark text-white'}`} onClick={() => setActiveTab('add-agent')}>
               <i className="pi pi-user-plus me-2"></i> Add Agent
             </button>
           </div>
@@ -259,7 +282,7 @@ const AdminDashboard = () => {
           {activeTab === 'users' && (
             <div className="card shadow-sm border-0 p-3">
               <h4 className="mb-3">Users Management</h4>
-              <DataTable value={users} paginator rows={10} className="p-datatable-sm shadow-sm">
+              <DataTable value={users} paginator rows={10} className="p-datatable-sm shadow-sm bg-dark text-white">
                 <Column field="id" header="ID" sortable></Column>
                 <Column field="username" header="Username" sortable></Column>
                 <Column field="role" header="Role" sortable></Column>
@@ -293,6 +316,7 @@ const AdminDashboard = () => {
                 <Column field="promoCode" header="Promo Code"></Column>
                 <Column field="discountPercentage" header="Discount %"></Column>
                 <Column field="validTill" header="Valid Till"></Column>
+                <Column header="Actions" body={promoActionTemplate}></Column>
               </DataTable>
             </div>
           )}
@@ -356,25 +380,25 @@ const AdminDashboard = () => {
               <h4 className="mb-4">Pending Requests</h4>
               <ul className="nav nav-pills mb-4">
                 <li className="nav-item">
-                  <button 
-                    className={`nav-link rounded-pill px-4 ${activeRequestSubTab === 'maintenance' ? 'bg-primary text-white shadow-sm' : 'text-primary'}`} 
-                    style={{ fontWeight: '600' }} 
+                  <button
+                    className={`nav-link rounded-pill px-4 ${activeRequestSubTab === 'maintenance' ? 'bg-primary text-white shadow-sm' : 'text-primary'}`}
+                    style={{ fontWeight: '600' }}
                     onClick={() => setActiveRequestSubTab('maintenance')}
                   >
                     <i className="pi pi-wrench me-2"></i>Maintenance
                   </button>
                 </li>
                 <li className="nav-item ms-3">
-                  <button 
-                    className={`nav-link rounded-pill px-4 ${activeRequestSubTab === 'customer' ? 'bg-warning text-dark shadow-sm' : 'text-warning'}`} 
-                    style={{ fontWeight: '600' }} 
+                  <button
+                    className={`nav-link rounded-pill px-4 ${activeRequestSubTab === 'customer' ? 'bg-warning text-dark shadow-sm' : 'text-warning'}`}
+                    style={{ fontWeight: '600' }}
                     onClick={() => setActiveRequestSubTab('customer')}
                   >
                     <i className="pi pi-user me-2"></i>Customer
                   </button>
                 </li>
               </ul>
-              
+
               {activeRequestSubTab === 'maintenance' && (
                 <div>
                   <DataTable value={requests.filter(r => r.requestType === 'MAINTENANCE')} paginator rows={10} className="p-datatable-sm shadow-sm mt-3" emptyMessage="No maintenance requests pending.">
@@ -386,7 +410,7 @@ const AdminDashboard = () => {
                     <Column field="daysSinceLastService" header="Days Since Last Service"></Column>
                     <Column header="Actions" body={(rowData) => <Button label="Add for maintenance" className="p-button-sm p-button-info" icon="pi pi-cog" onClick={() => handleAddForMaintenance(rowData.id)} />} />
                   </DataTable>
-                  
+
                   <div className="mt-5">
                     <h5 className="mb-3">Vehicles Currently Under Maintenance</h5>
                     <DataTable value={vehiclesUnderMaintenance} paginator rows={10} className="p-datatable-sm shadow-sm" emptyMessage="No vehicles currently under maintenance.">
@@ -394,12 +418,12 @@ const AdminDashboard = () => {
                       <Column field="brandName" header="Brand"></Column>
                       <Column field="model" header="Model"></Column>
                       <Column field="location" header="Location"></Column>
-                      <Column header="Actions" body={(rowData) => <Button label="Mark Available" className="p-button-sm btn btn-outline-warning text-dark font-bold" onClick={() => handleFinishMaintenance(rowData.vehicleId)} />} />
+                      <Column header="Actions" body={(rowData) => <Button label="Mark Available" className="p-button-sm btn btn-warning text-dark font-bold" onClick={() => handleFinishMaintenance(rowData.vehicleId)} />} />
                     </DataTable>
                   </div>
                 </div>
               )}
-              
+
               {activeRequestSubTab === 'customer' && (
                 <div>
                   <DataTable value={passwordRequests} paginator rows={10} className="p-datatable-sm shadow-sm" emptyMessage="No pending password reset requests">
@@ -418,21 +442,21 @@ const AdminDashboard = () => {
               <h4 className="mb-4">Add Rental Agent</h4>
               <form onSubmit={handleAddAgent} className="row g-3">
                 <div className="col-md-6 offset-md-3">
-                    <div className="mb-3">
-                      <InputText name="name" placeholder="Full Name" className="w-100" required />
-                    </div>
-                    <div className="mb-3">
-                      <InputText name="email" type="email" placeholder="Email" className="w-100" required />
-                    </div>
-                    <div className="mb-3">
-                      <InputText name="password" type="text" placeholder="Password" className="w-100" required />
-                    </div>
-                    <div className="mb-3">
-                      <InputText name="mobile" type="tel" placeholder="Mobile Number" className="w-100" required />
-                    </div>
-                    <div className="mb-3 text-center">
-                      <Button type="submit" label="Create Agent" icon="pi pi-user-plus" className="p-button-primary w-100 py-3" />
-                    </div>
+                  <div className="mb-3">
+                    <InputText name="name" placeholder="Full Name" className="w-100" required />
+                  </div>
+                  <div className="mb-3">
+                    <InputText name="email" type="email" placeholder="Email" className="w-100" required />
+                  </div>
+                  <div className="mb-3">
+                    <InputText name="password" type="text" placeholder="Password" className="w-100" required />
+                  </div>
+                  <div className="mb-3">
+                    <InputText name="mobile" type="tel" placeholder="Mobile Number" className="w-100" required />
+                  </div>
+                  <div className="mb-3 text-center">
+                    <Button type="submit" label="Create Agent" icon="pi pi-user-plus" className="p-button-primary w-100 py-3" />
+                  </div>
                 </div>
               </form>
             </div>
@@ -447,13 +471,13 @@ const AdminDashboard = () => {
             <p className="mb-4"><strong>Role:</strong> {selectedRequest.requestedByRole}</p>
             <div className="mb-4">
               <label className="form-label font-bold text-secondary">New Password</label>
-              <Password 
-                className="w-100" 
-                inputClassName="w-100" 
-                value={newPassword} 
-                onChange={(e) => setNewPassword(e.target.value)} 
-                toggleMask 
-                feedback={false} 
+              <Password
+                className="w-100"
+                inputClassName="w-100"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                toggleMask
+                feedback={false}
               />
             </div>
             <div className="text-end mt-4">
