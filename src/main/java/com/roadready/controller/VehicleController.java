@@ -26,9 +26,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/api/v1/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -54,6 +57,7 @@ public class VehicleController {
             @RequestParam(required = false) String vehicleType,
             @RequestParam(required = false) String subType,
             Pageable pageable) {
+        log.info("Searching vehicles with model: {}, brand: {}, location: {}", model, brandName, location);
         PaginatedResponse<VehicleDto> vehicles = vehicleService.searchVehicles(model, maxPrice, brandName, location, startDate, endDate, vehicleType, subType, pageable);
         return ResponseEntity.ok(vehicles);
     }
@@ -69,6 +73,7 @@ public class VehicleController {
 
     @PostMapping("/add")
     public ResponseEntity<VehicleDto> addVehicle(@RequestBody com.roadready.dto.VehicleRequestDto dto) {
+        log.info("Adding new vehicle: {} {}", dto.brandId(), dto.model());
         VehicleDto createdVehicle = vehicleService.addVehicle(dto);
         return ResponseEntity.ok(createdVehicle);
     }
@@ -90,6 +95,7 @@ public class VehicleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVehicle(@PathVariable Integer id) {
+        log.info("Deleting vehicle with ID: {}", id);
         vehicleRepository.deleteById(id);
         return ResponseEntity.ok("Vehicle deleted successfully");
     }

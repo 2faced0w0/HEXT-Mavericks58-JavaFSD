@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/reviews")
+@RequestMapping("/api/v1/reviews")
 @AllArgsConstructor
 public class ReviewController {
 

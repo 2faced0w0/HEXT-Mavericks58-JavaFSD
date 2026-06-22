@@ -9,7 +9,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/promotions")
+@RequestMapping("/api/v1/promotions")
 @AllArgsConstructor
 public class PromotionController {
 

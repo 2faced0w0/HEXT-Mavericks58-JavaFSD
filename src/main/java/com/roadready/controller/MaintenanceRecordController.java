@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/maintenance")
+@RequestMapping("/api/v1/maintenance")
 public class MaintenanceRecordController {
 
     private final MaintenanceRecordService maintenanceRecordService;

@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 
 @org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 @AllArgsConstructor
 public class AdminController {
 

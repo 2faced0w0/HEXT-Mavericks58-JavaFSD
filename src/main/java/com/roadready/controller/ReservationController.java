@@ -15,9 +15,12 @@ import com.roadready.model.RentalAgent;
 import com.roadready.repository.CustomerRepository;
 import com.roadready.repository.RentalAgentRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/reservations")
+@RequestMapping("/api/v1/reservations")
 @AllArgsConstructor
 public class ReservationController {
 
@@ -27,12 +30,14 @@ public class ReservationController {
 
     @PostMapping("/add")
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto requestDto) {
+        log.info("Creating reservation for customer ID: {} and vehicle ID: {}", requestDto.customerId(), requestDto.vehicleId());
         ReservationResponseDto response = reservationService.createReservation(requestDto);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{reservationId}/cancel")
     public ResponseEntity<ReservationResponseDto> cancelReservation(@PathVariable Integer reservationId) {
+        log.info("Cancelling reservation with ID: {}", reservationId);
         ReservationResponseDto response = reservationService.cancelReservation(reservationId);
         return ResponseEntity.ok(response);
     }
@@ -62,11 +67,13 @@ public class ReservationController {
 
     @PostMapping("/{reservationId}/check-out")
     public ResponseEntity<ReservationResponseDto> checkOut(@PathVariable Integer reservationId, @RequestParam(required = false) String initialCondition) {
+        log.info("Checking out reservation ID: {}", reservationId);
         return ResponseEntity.ok(reservationService.checkOut(reservationId, initialCondition));
     }
 
     @PostMapping("/{reservationId}/check-in")
     public ResponseEntity<ReservationResponseDto> checkIn(@PathVariable Integer reservationId, @RequestParam(required = false) String finalCondition) {
+        log.info("Checking in reservation ID: {}", reservationId);
         return ResponseEntity.ok(reservationService.checkIn(reservationId, finalCondition));
     }
 }

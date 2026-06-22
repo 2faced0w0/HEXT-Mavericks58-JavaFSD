@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/v1/customers")
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class CustomerController {

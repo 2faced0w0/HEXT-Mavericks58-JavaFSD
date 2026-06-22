@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @AllArgsConstructor
 public class UserController {
 

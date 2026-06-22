@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @org.springframework.web.bind.annotation.CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/payments")
+@RequestMapping("/api/v1/payments")
 @AllArgsConstructor
 public class PaymentController {
 

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
