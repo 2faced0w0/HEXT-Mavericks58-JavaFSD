@@ -57,7 +57,7 @@ INSERT INTO rental_agents (name, phone_number, admin_id, user_id) VALUES
 ('Lisa Agent', '+1-555-5555', 5, 15);
 
 -- ==========================================================
--- 4. Insert Brands
+-- 4. Insert Brands (15 total)
 -- ==========================================================
 INSERT INTO brands (brand_name) VALUES
 ('Toyota'),
@@ -66,76 +66,120 @@ INSERT INTO brands (brand_name) VALUES
 ('BMW'),
 ('Tesla'),
 ('Yamaha'),
-('Vespa');
+('Vespa'),
+('Audi'),
+('Mercedes-Benz'),
+('Volkswagen'),
+('Nissan'),
+('Chevrolet'),
+('Hyundai'),
+('Kia'),
+('Subaru');
 
 -- ==========================================================
--- 5. Insert Vehicles
+-- 5. Insert Vehicles (15 total)
 -- ==========================================================
-INSERT INTO vehicles (brand_id, agent_id, model, specifications, pricing_per_day, is_available, image_url, location, vehicle_type, sub_type) VALUES
-(1, 1, 'Camry', 'Automatic, Petrol, 5 Seats', 55.00, TRUE, 'camry.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
-(2, 2, 'CR-V', 'Automatic, Hybrid, 5 Seats', 70.00, TRUE, 'crv.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Petrol'),
-(3, 3, 'Mustang', 'Manual, Petrol, 4 Seats', 95.00, TRUE, 'mustang.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
-(4, 4, '3 Series', 'Automatic, Petrol, 5 Seats', 110.00, TRUE, '3series.jpg', 'Uptown Branch, NY', '4 Wheeler', 'Petrol'),
-(5, 5, 'Model 3', 'Automatic, Electric, 5 Seats', 85.00, FALSE, 'model3.jpg', 'Airport Terminal, NY', '4 Wheeler', 'EV'),
-(6, 1, 'YZF R3', 'Manual, Petrol, 2 Seats', 40.00, TRUE, 'r3.jpg', 'Downtown Center, NY', '2 Wheeler', 'Bike'),
-(7, 2, 'GTS 300', 'Automatic, Petrol, 2 Seats', 30.00, TRUE, 'vespa.jpg', 'Downtown Center, NY', '2 Wheeler', 'Scooty');
+INSERT INTO vehicles (brand_id, agent_id, model, specifications, pricing_per_day, availability_status, image_url, location, vehicle_type, sub_type) VALUES
+(1, 1, 'Camry', 'Automatic, Petrol, 5 Seats', 55.00, 'AVAILABLE', 'camry.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(2, 2, 'CR-V', 'Automatic, Hybrid, 5 Seats', 70.00, 'AVAILABLE', 'crv.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Petrol'),
+(3, 3, 'Mustang', 'Manual, Petrol, 4 Seats', 95.00, 'AVAILABLE', 'mustang.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(4, 4, '3 Series', 'Automatic, Petrol, 5 Seats', 110.00, 'AVAILABLE', '3series.jpg', 'Uptown Branch, NY', '4 Wheeler', 'Petrol'),
+(5, 5, 'Model 3', 'Automatic, Electric, 5 Seats', 85.00, 'MAINTENANCE', 'model3.jpg', 'Airport Terminal, NY', '4 Wheeler', 'EV'),
+(6, 1, 'YZF R3', 'Manual, Petrol, 2 Seats', 40.00, 'AVAILABLE', 'r3.jpg', 'Downtown Center, NY', '2 Wheeler', 'Bike'),
+(7, 2, 'GTS 300', 'Automatic, Petrol, 2 Seats', 30.00, 'AVAILABLE', 'vespa.jpg', 'Downtown Center, NY', '2 Wheeler', 'Scooty'),
+(8, 3, 'A4', 'Automatic, Petrol, 5 Seats', 100.00, 'AVAILABLE', 'a4.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Petrol'),
+(9, 4, 'C-Class', 'Automatic, Petrol, 5 Seats', 105.00, 'AVAILABLE', 'cclass.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(10, 5, 'Golf', 'Manual, Petrol, 5 Seats', 50.00, 'AVAILABLE', 'golf.jpg', 'Uptown Branch, NY', '4 Wheeler', 'Petrol'),
+(11, 1, 'Altima', 'Automatic, Petrol, 5 Seats', 52.00, 'AVAILABLE', 'altima.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(12, 2, 'Silverado', 'Automatic, Diesel, 5 Seats', 80.00, 'AVAILABLE', 'silverado.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Diesel'),
+(13, 3, 'Elantra', 'Automatic, Petrol, 5 Seats', 48.00, 'AVAILABLE', 'elantra.jpg', 'Downtown Center, NY', '4 Wheeler', 'Petrol'),
+(14, 4, 'Optima', 'Automatic, Petrol, 5 Seats', 49.00, 'AVAILABLE', 'optima.jpg', 'Uptown Branch, NY', '4 Wheeler', 'Petrol'),
+(15, 5, 'Outback', 'Automatic, Petrol, 5 Seats', 65.00, 'AVAILABLE', 'outback.jpg', 'Airport Terminal, NY', '4 Wheeler', 'Petrol');
 
 -- ==========================================================
--- 6. Insert Reservations
+-- 6. Insert Reservations (15 total)
 -- ==========================================================
 INSERT INTO reservations (customer_id, vehicle_id, pickup_time, dropoff_time, optional_extras, booking_status) VALUES
-(1, 1, '2026-06-10 10:00:00', '2026-06-12 10:00:00', 'Child Seat', 'CONFIRMED'),
+(1, 1, '2026-06-10 10:00:00', '2026-06-12 10:00:00', 'Child Seat', 'COMPLETED'),
 (2, 5, '2026-06-01 09:00:00', '2026-06-05 09:00:00', 'None', 'ACTIVE'),
 (3, 3, '2026-06-15 14:00:00', '2026-06-16 14:00:00', 'GPS', 'PENDING'),
 (1, 4, '2026-05-10 08:00:00', '2026-05-12 08:00:00', 'None', 'COMPLETED'),
 (4, 2, '2026-04-01 10:00:00', '2026-04-03 10:00:00', 'Extra Insurance', 'COMPLETED'),
-(5, 3, '2026-05-15 09:00:00', '2026-05-20 09:00:00', 'None', 'COMPLETED');
+(5, 3, '2026-05-15 09:00:00', '2026-05-20 09:00:00', 'None', 'COMPLETED'),
+(2, 8, '2026-06-18 10:00:00', '2026-06-20 10:00:00', 'GPS', 'CONFIRMED'),
+(3, 9, '2026-06-22 09:00:00', '2026-06-25 09:00:00', 'None', 'CONFIRMED'),
+(4, 10, '2026-07-01 10:00:00', '2026-07-05 10:00:00', 'Child Seat', 'PENDING'),
+(5, 11, '2026-07-10 08:00:00', '2026-07-12 08:00:00', 'None', 'PENDING'),
+(1, 12, '2026-04-10 08:00:00', '2026-04-12 08:00:00', 'Extra Insurance', 'COMPLETED'),
+(2, 13, '2026-03-01 10:00:00', '2026-03-03 10:00:00', 'None', 'COMPLETED'),
+(3, 14, '2026-02-15 09:00:00', '2026-02-20 09:00:00', 'GPS', 'COMPLETED'),
+(4, 15, '2026-01-10 08:00:00', '2026-01-12 08:00:00', 'None', 'COMPLETED'),
+(5, 1, '2025-12-01 10:00:00', '2025-12-05 10:00:00', 'Child Seat', 'COMPLETED');
 
 -- ==========================================================
--- 7. Insert Payments
+-- 7. Insert Payments (15 total)
 -- ==========================================================
--- Reservation 1: 2 days @ 55/day = 110
 INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(1, 110.00, 'CREDIT_CARD', 'SUCCESS');
-
--- Reservation 2: 4 days @ 85/day = 340
-INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(2, 340.00, 'PAYPAL', 'SUCCESS');
-
--- Reservation 3: 1 day @ 95/day = 95
-INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(3, 95.00, 'CREDIT_CARD', 'PENDING');
-
--- Reservation 4: 2 days @ 110/day = 220
-INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(4, 220.00, 'DEBIT_CARD', 'SUCCESS');
-
--- Reservation 5: 2 days @ 70/day = 140
-INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(5, 140.00, 'CREDIT_CARD', 'SUCCESS');
-
--- Reservation 6: 5 days @ 95/day = 475
-INSERT INTO payments (reservation_id, amount, payment_method, payment_status) VALUES
-(6, 475.00, 'PAYPAL', 'SUCCESS');
+(1, 110.00, 'CREDIT_CARD', 'SUCCESS'),
+(2, 340.00, 'PAYPAL', 'SUCCESS'),
+(3, 95.00, 'CREDIT_CARD', 'PENDING'),
+(4, 220.00, 'DEBIT_CARD', 'SUCCESS'),
+(5, 140.00, 'CREDIT_CARD', 'SUCCESS'),
+(6, 475.00, 'PAYPAL', 'SUCCESS'),
+(7, 200.00, 'CREDIT_CARD', 'SUCCESS'),
+(8, 315.00, 'DEBIT_CARD', 'SUCCESS'),
+(9, 200.00, 'PAYPAL', 'PENDING'),
+(10, 104.00, 'CREDIT_CARD', 'PENDING'),
+(11, 160.00, 'CREDIT_CARD', 'SUCCESS'),
+(12, 96.00, 'PAYPAL', 'SUCCESS'),
+(13, 245.00, 'DEBIT_CARD', 'SUCCESS'),
+(14, 98.00, 'CREDIT_CARD', 'SUCCESS'),
+(15, 220.00, 'PAYPAL', 'SUCCESS');
 
 -- ==========================================================
--- 8. Insert Reviews
+-- 8. Insert Reviews (15 total)
 -- ==========================================================
--- Only putting a review for the COMPLETED reservation (Reservation 4)
 INSERT INTO reviews (reservation_id, rating, comments) VALUES
 (4, 5, 'Absolutely loved the BMW! Smooth handover and clean interior.'),
 (1, 4, 'Great Camry, but the child seat was a bit hard to install.'),
 (2, 5, 'The Model 3 was incredible to drive.'),
 (5, 4, 'The CR-V was perfect for our weekend trip.'),
-(6, 5, 'Driving a Mustang for 5 days was a dream come true!');
+(6, 5, 'Driving a Mustang for 5 days was a dream come true!'),
+(7, 4, 'The Audi was great, very comfortable.'),
+(8, 5, 'Loved the Mercedes, very luxurious!'),
+(11, 4, 'Silverado is a beast! Great for moving stuff.'),
+(12, 3, 'Elantra was okay, but a bit dirty.'),
+(13, 2, 'Optima had a weird smell.'),
+(14, 5, 'Outback was perfect for our camping trip!'),
+(15, 4, 'Camry was reliable as always.'),
+(3, 5, 'Will definitely rent the BMW again.'),
+(9, 4, 'Good experience overall.'),
+(10, 5, 'Mustang was so much fun!');
 
 -- ==========================================================
--- 9. Insert Requests
+-- 9. Insert Requests (15 total)
 -- ==========================================================
-INSERT INTO requests (request_type, status, requested_by, vehicle_id, description, created_at, resolved_at) VALUES
-('PASSWORD_RESET', 'PENDING', 1, NULL, NULL, NOW(), NULL),
-('PASSWORD_RESET', 'PENDING', 2, NULL, NULL, NOW(), NULL),
-('MAINTENANCE', 'PENDING', 11, 1, 'Oil change needed', NOW(), NULL),
-('MAINTENANCE', 'PENDING', 12, 3, 'Brake pads worn out', NOW(), NULL),
-('MAINTENANCE', 'RESOLVED', 13, 4, 'Routine checkup completed', '2026-06-10 10:00:00', '2026-06-16 10:00:00');
+INSERT INTO requests (request_type, status, requested_by, vehicle_id, description, days_since_last_service, created_at, resolved_at) VALUES
+('PASSWORD_RESET', 'PENDING', 1, NULL, NULL, NULL, NOW(), NULL),
+('PASSWORD_RESET', 'PENDING', 2, NULL, NULL, NULL, NOW(), NULL),
+('MAINTENANCE', 'PENDING', 11, 1, 'Oil change needed', 45, NOW(), NULL),
+('MAINTENANCE', 'PENDING', 12, 3, 'Brake pads worn out', 50, NOW(), NULL),
+('MAINTENANCE', 'RESOLVED', 13, 4, 'Routine checkup completed', 38, '2026-06-10 10:00:00', '2026-06-16 10:00:00'),
+('PASSWORD_RESET', 'RESOLVED', 3, NULL, NULL, NULL, '2026-06-01 10:00:00', '2026-06-02 10:00:00'),
+('PASSWORD_RESET', 'RESOLVED', 4, NULL, NULL, NULL, '2026-06-05 10:00:00', '2026-06-06 10:00:00'),
+('MAINTENANCE', 'PENDING', 14, 5, 'Battery check', 42, NOW(), NULL),
+('MAINTENANCE', 'RESOLVED', 15, 6, 'Tire replacement', 55, '2026-05-10 10:00:00', '2026-05-12 10:00:00'),
+('PASSWORD_RESET', 'PENDING', 5, NULL, NULL, NULL, NOW(), NULL),
+('MAINTENANCE', 'PENDING', 11, 7, 'Scratch repair', 36, NOW(), NULL),
+('MAINTENANCE', 'RESOLVED', 12, 8, 'Wiper fluid refill', 60, '2026-05-15 10:00:00', '2026-05-16 10:00:00'),
+('PASSWORD_RESET', 'RESOLVED', 6, NULL, NULL, NULL, '2026-04-10 10:00:00', '2026-04-11 10:00:00'),
+('MAINTENANCE', 'PENDING', 13, 9, 'Engine light on', 48, NOW(), NULL),
+('MAINTENANCE', 'RESOLVED', 14, 10, 'Oil change', 39, '2026-03-10 10:00:00', '2026-03-12 10:00:00');
+
+-- ==========================================================
+-- 10. Insert Promotions (1 so banner can work)
+-- ==========================================================
+INSERT INTO promotions (promo_code, created_at, valid_till, discount_percentage, is_banner_active) VALUES
+('SUMMER26', NOW(), '2026-09-01 00:00:00', 15, TRUE),
+('WINTER26', NOW(), '2026-12-31 00:00:00', 10, FALSE);
 

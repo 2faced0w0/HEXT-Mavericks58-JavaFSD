@@ -64,6 +64,7 @@ public class VehicleRepositoryTest {
         vehicle.setAgent(agent);
         vehicle.setBrand(brand);
         vehicle.setModel("Test Model");
+        vehicle.setLocation("Test Location");
         vehicle.setPricingPerDay(BigDecimal.valueOf(100));
         vehicle.setAvailabilityStatus(AvailabilityStatus.AVAILABLE);
         vehicleRepository.save(vehicle);
