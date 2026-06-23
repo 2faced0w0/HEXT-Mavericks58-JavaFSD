@@ -257,6 +257,16 @@ const RentalAgentDashboard = () => {
     }
   };
 
+  const confirmBooking = async (reservationId) => {
+    try {
+      await reservationService.confirmReservation(reservationId);
+      toast.current.show({ severity: 'success', summary: 'Confirmed', detail: 'Reservation confirmed successfully', life: 3000 });
+      fetchReservations();
+    } catch (e) {
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to confirm reservation', life: 3000 });
+    }
+  };
+
   const availabilityTemplate = (rowData) => {
     let color = 'bg-success';
     if (rowData.availabilityStatus === 'RENTED') color = 'bg-danger';
@@ -332,10 +342,15 @@ const RentalAgentDashboard = () => {
   };
 
   const resActionTemplate = (rowData) => {
+    if (rowData.bookingStatus === 'PENDING') {
+      return (
+        <Button label="CONFIRM" icon="pi pi-check" className="p-button-warning p-button-sm fw-bold rounded-pill" onClick={() => confirmBooking(rowData.reservationId)} />
+      );
+    }
     return (
       <div className="d-flex gap-2">
-        <input type="button" value="Check-Out" className='btn btn-info' onClick={() => openDialog('checkout', rowData)} disabled={rowData.bookingStatus !== 'CONFIRMED'} />
-        <input type="button" value="Check-In" className='btn btn-primary' onClick={() => openDialog('checkin', rowData)} disabled={rowData.bookingStatus !== 'CHECKED_OUT'} />
+        <input type="button" value="Check-Out" className='btn btn-info btn-sm fw-bold rounded-pill' onClick={() => openDialog('checkout', rowData)} disabled={rowData.bookingStatus !== 'CONFIRMED'} />
+        <input type="button" value="Check-In" className='btn btn-primary btn-sm fw-bold rounded-pill' onClick={() => openDialog('checkin', rowData)} disabled={rowData.bookingStatus !== 'CHECKED_OUT'} />
       </div>
     );
   };

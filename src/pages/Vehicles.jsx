@@ -18,22 +18,34 @@ const VehicleCard = ({ vehicle, onRentNow }) => {
 
   return (
     <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
-      <div className="p-4 border-1 surface-border surface-card border-round shadow-sm h-100 transition-all bg-dark text-light industrial-shadow">
-        <div className="d-flex flex-column align-items-center gap-3 py-3" style={{ minHeight: '220px' }}>
+      <div className="border-1 surface-border surface-card border-round shadow-sm h-100 transition-all bg-dark text-light industrial-shadow overflow-hidden d-flex flex-column position-relative" style={{ minHeight: '350px' }}>
+        
+        {/* Background Image Container */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
           {images.length > 0 ? (
-            <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden' }}>
-              <HoverCarousel images={images} altText={`${vehicle.brandName} ${vehicle.model}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
+            <HoverCarousel images={images} altText={`${vehicle.brandName} ${vehicle.model}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
-            <i className="pi pi-car text-primary" style={{ fontSize: '3rem', height: '150px', display: 'flex', alignItems: 'center' }}></i>
+            <div className="d-flex align-items-center justify-content-center bg-secondary" style={{ width: '100%', height: '100%' }}>
+              <i className="pi pi-car text-primary" style={{ fontSize: '5rem' }}></i>
+            </div>
           )}
-          <div className="text-2xl font-bold text-center mt-2 text-primary">{vehicle.brandName} {vehicle.model}</div>
-          <div className="text-light">{vehicle.vehicleType} {vehicle.subType ? `- ${vehicle.subType}` : ''}</div>
-          <Tag value={vehicle.availabilityStatus} severity={vehicle.availabilityStatus === 'AVAILABLE' ? 'success' : vehicle.availabilityStatus === 'MAINTENANCE' ? 'warning' : 'danger'}></Tag>
+          {/* Dark Gradient Overlay for text readability */}
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to top, rgba(30,30,30,1) 0%, rgba(30,30,30,0.8) 40%, rgba(30,30,30,0.1) 100%)', zIndex: 1 }}></div>
         </div>
-        <div className="d-flex align-items-center justify-content-between mt-3 w-100 px-3">
-          <span className="text-xl font-semibold text-white">Rs.{vehicle.pricingPerDay}/day</span>
-          <button className="btn btn-primary btn-sm rounded-pill fw-bold" onClick={() => onRentNow(vehicle.vehicleId)} disabled={vehicle.availabilityStatus !== 'AVAILABLE'}>Rent Now</button>
+
+        {/* Text Content overlay */}
+        <div className="p-4 d-flex flex-column flex-grow-1 position-relative" style={{ zIndex: 2, justifyContent: 'flex-end', minHeight: '350px' }}>
+          <div className="mt-auto">
+            <div className="text-2xl font-bold text-center text-primary">{vehicle.brandName} {vehicle.model}</div>
+            <div className="text-light text-center mt-1 font-semibold">{vehicle.vehicleType} {vehicle.subType ? `- ${vehicle.subType}` : ''}</div>
+            <div className="text-center mt-3 mb-3">
+              <Tag value={vehicle.availabilityStatus} severity={vehicle.availabilityStatus === 'AVAILABLE' ? 'success' : vehicle.availabilityStatus === 'MAINTENANCE' ? 'warning' : 'danger'}></Tag>
+            </div>
+            <div className="d-flex align-items-center justify-content-between pt-3 border-top border-secondary">
+              <span className="text-xl font-bold text-white">Rs.{vehicle.pricingPerDay}/day</span>
+              <button className="btn btn-primary btn-sm rounded-pill fw-bold px-4" onClick={() => onRentNow(vehicle.vehicleId)} disabled={vehicle.availabilityStatus !== 'AVAILABLE'}>Rent Now</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

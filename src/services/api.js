@@ -76,6 +76,7 @@ export const reservationService = {
   getAgentReservations: (pageable) => api.get('/reservations/agent', { params: pageable }),
   cancelReservation: (id) => api.put(`/reservations/${id}/cancel`),
   modifyReservation: (id, data) => api.put(`/reservations/${id}`, data),
+  confirmReservation: (id) => api.put(`/reservations/${id}/confirm`),
   checkIn: (id, condition) => api.post(`/reservations/${id}/check-in`, null, { params: { finalCondition: condition } }),
   checkOut: (id, condition) => api.post(`/reservations/${id}/check-out`, null, { params: { initialCondition: condition } })
 };

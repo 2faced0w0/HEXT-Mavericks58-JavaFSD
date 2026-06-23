@@ -14,6 +14,7 @@ import { Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
 import { Password } from 'primereact/password';
 import { Toast } from 'primereact/toast';
+import SystemStats from '../../components/SystemStats';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
@@ -325,36 +326,7 @@ const AdminDashboard = () => {
             <div className="card shadow-sm border-0 p-3">
               <h4 className="mb-3">System Reports</h4>
               {reports ? (
-                <div className="row g-4">
-                  <div className="col-md-3">
-                    <Card className="text-center bg-primary text-white shadow-sm border-0">
-                      <i className="pi pi-indian-rupee" style={{ fontSize: '2rem' }}></i>
-                      <h3 className="mt-3">Rs. {reports.totalRevenue}</h3>
-                      <p className="mb-0">Total Revenue</p>
-                    </Card>
-                  </div>
-                  <div className="col-md-3">
-                    <Card className="text-center bg-success text-white shadow-sm border-0">
-                      <i className="pi pi-users" style={{ fontSize: '2rem' }}></i>
-                      <h3 className="mt-3">{reports.totalUsers}</h3>
-                      <p className="mb-0">Total Users</p>
-                    </Card>
-                  </div>
-                  <div className="col-md-3">
-                    <Card className="text-center bg-warning text-white shadow-sm border-0">
-                      <i className="pi pi-calendar" style={{ fontSize: '2rem' }}></i>
-                      <h3 className="mt-3">{reports.totalReservations}</h3>
-                      <p className="mb-0">Reservations</p>
-                    </Card>
-                  </div>
-                  <div className="col-md-3">
-                    <Card className="text-center bg-info text-white shadow-sm border-0">
-                      <i className="pi pi-car" style={{ fontSize: '2rem' }}></i>
-                      <h3 className="mt-3">{reports.totalVehicles}</h3>
-                      <p className="mb-0">Vehicles in Fleet</p>
-                    </Card>
-                  </div>
-                </div>
+                <SystemStats reports={reports} vehicles={vehicles} />
               ) : (
                 <p>Loading reports...</p>
               )}
